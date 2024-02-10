@@ -15,5 +15,30 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    
+    public static final double kWheelBase = 0.5588;
+    public static final double kTrackWidth = 0.5588;
+    
+    public static final int frontLeftDriveMotorChannel = 4;
+    public static final int frontRightDriveMotorChannel = 1;
+    public static final int backLeftDriveMotorChannel = 2;
+    public static final int backRightDriveMotorChannel = 3;
+
+    public static final int frontLeftTurningMotorChannel = 14;
+    public static final int frontRightTurningMotorChannel = 11;
+    public static final int backLeftTurningMotorChannel = 12;
+    public static final int backRightTurningMotorChannel = 13;
+
+    public static final int frontLeftEncoderChannel = 14;
+    public static final int frontRightEncoderChannel = 11;
+    public static final int backLeftEncoderChannel = 12;
+    public static final int backRightEncoderChannel = 13;
+
+    public static final double frontLeftEncoderOffset = -6.504;
+    public static final double frontRightEncoderOffset = 342.334;
+    public static final double backLeftEncoderOffset = 53.174;
+    public static final double backRightEncoderOffset = 188.789;
+
+
   }
 }

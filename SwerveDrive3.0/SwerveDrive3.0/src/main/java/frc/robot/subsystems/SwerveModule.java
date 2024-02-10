@@ -37,6 +37,9 @@ public class SwerveModule {
   private final RelativeEncoder m_driveEncoder;
   private final CoreCANcoder m_turningEncoder;
 
+  private static double m_encoderOffset;
+
+
   // Gains are for example purposes only - must be determined for your own robot!
   private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
 
@@ -59,16 +62,22 @@ public class SwerveModule {
    * @param driveMotorChannel PWM output for the drive motor.
    * @param turningMotorChannel PWM output for the turning motor.
    * @param turningEncoderChannel DIO input for the turning encoder channel A
+   * @param ecoderOffset encoder offset
    */
   public SwerveModule(
       int driveMotorChannel,
       int turningMotorChannel,
-      int turningEncoderChannel) {
+      int turningEncoderChannel,
+      double encoderOffset) {
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = new CANcoder(turningEncoderChannel);
+
+    m_encoderOffset = encoderOffset;
+
+    
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
@@ -91,7 +100,7 @@ public class SwerveModule {
    */
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-        m_driveEncoder.getVelocity(), new Rotation2d(m_turningEncoder.getPosition().getValue()));
+        m_driveEncoder.getVelocity(), new Rotation2d(m_turningEncoder.getPosition().getValue() - m_encoderOffset));
   }
 
   /**
@@ -100,6 +109,7 @@ public class SwerveModule {
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
+    System.out.println(m_driveEncoder.getPosition());
     return new SwerveModulePosition(
         m_driveEncoder.getPosition(), new Rotation2d(m_turningEncoder.getPosition().getValue()));
   }
@@ -128,7 +138,7 @@ public class SwerveModule {
 
     // Calculate the turning motor output from the turning PID controller.
     final double turnOutput =
-        m_turningPIDController.calculate(m_turningEncoder.getPosition().getValue(), state.angle.getRadians());
+        m_turningPIDController.calculate(m_turningEncoder.getPosition().getValue() + 5, state.angle.getRadians());
 
     final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
