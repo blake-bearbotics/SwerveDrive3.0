@@ -34,7 +34,8 @@ public final class Constants {
     public static final int backLeftEncoderChannel = 12;
     public static final int backRightEncoderChannel = 13;
 
-    public static final double frontLeftEncoderOffset = -6.504;
+    //must put in rotations
+    public static final double frontLeftEncoderOffset = -6.504; 
     public static final double frontRightEncoderOffset = 342.334;
     public static final double backLeftEncoderOffset = 53.174;
     public static final double backRightEncoderOffset = 188.789;

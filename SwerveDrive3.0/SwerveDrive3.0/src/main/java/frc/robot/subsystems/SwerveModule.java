@@ -11,7 +11,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+//import java.util.Map;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.core.CoreCANcoder;
@@ -39,7 +43,6 @@ public class SwerveModule {
 
   private static double m_encoderOffset;
 
-
   // Gains are for example purposes only - must be determined for your own robot!
   private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
 
@@ -52,7 +55,7 @@ public class SwerveModule {
           new TrapezoidProfile.Constraints(
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
-  // Gains are for example purposes only - must be determined for your own robot!
+  // Gains are for example purposes only - must be determined for your own robot! Figure out what in the world is going on with this bc I don't have the energy right now.
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(1, 3);
   private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
 
@@ -100,7 +103,7 @@ public class SwerveModule {
    */
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-        m_driveEncoder.getVelocity(), new Rotation2d(m_turningEncoder.getPosition().getValue() - m_encoderOffset));
+        m_driveEncoder.getVelocity(), new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI));
   }
 
   /**
@@ -111,7 +114,7 @@ public class SwerveModule {
   public SwerveModulePosition getPosition() {
     System.out.println(m_driveEncoder.getPosition());
     return new SwerveModulePosition(
-        m_driveEncoder.getPosition(), new Rotation2d(m_turningEncoder.getPosition().getValue()));
+        m_driveEncoder.getPosition(), new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI));
   }
 
   /**
@@ -120,7 +123,7 @@ public class SwerveModule {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    var encoderRotation = new Rotation2d(m_turningEncoder.getPosition().getValue());
+    var encoderRotation = new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI);
 
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation);
@@ -138,7 +141,7 @@ public class SwerveModule {
 
     // Calculate the turning motor output from the turning PID controller.
     final double turnOutput =
-        m_turningPIDController.calculate(m_turningEncoder.getPosition().getValue() + 5, state.angle.getRadians());
+        m_turningPIDController.calculate((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI, state.angle.getRadians());
 
     final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
