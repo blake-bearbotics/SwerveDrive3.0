@@ -13,8 +13,10 @@ public class Intake {
     public void runIntake() {
         m_intakeMotor.set(0.5);
     }
-
+    // I don't think we need this but I'm leaving it for now just incase
+    /*    
     public void stopIntake() {
         m_intakeMotor.set(0.0);
     }
+     */
 }
