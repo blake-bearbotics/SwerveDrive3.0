@@ -29,16 +29,16 @@ public final class Constants {
     public static final int backLeftTurningMotorChannel = 12;
     public static final int backRightTurningMotorChannel = 13;
 
-    public static final int frontLeftEncoderChannel = 14;
-    public static final int frontRightEncoderChannel = 11;
-    public static final int backLeftEncoderChannel = 12;
-    public static final int backRightEncoderChannel = 13;
+    public static final int frontLeftEncoderChannel = 24;
+    public static final int frontRightEncoderChannel = 21;
+    public static final int backLeftEncoderChannel = 22;
+    public static final int backRightEncoderChannel = 23;
 
     //must put in rotations
-    public static final double frontLeftEncoderOffset = -6.504; 
-    public static final double frontRightEncoderOffset = 342.334;
-    public static final double backLeftEncoderOffset = 53.174;
-    public static final double backRightEncoderOffset = 188.789;
+    public static final double frontLeftEncoderOffset = -0.357422;//-6.504; 
+    public static final double frontRightEncoderOffset = 0.168213;//342.334;
+    public static final double backLeftEncoderOffset = -0.367920;//53.174;
+    public static final double backRightEncoderOffset = -0.447266;//188.789;
 
 
   }

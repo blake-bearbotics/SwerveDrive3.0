@@ -11,8 +11,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 //import java.util.Map;
@@ -41,15 +44,25 @@ public class SwerveModule {
   private final RelativeEncoder m_driveEncoder;
   private final CoreCANcoder m_turningEncoder;
 
+  /**private ShuffleboardTab tab = Shuffleboard.getTab("Testing");
+  private GenericEntry kp = tab
+    .add("test title",1)
+    .withWidget(BuiltInWidgets.kPIDController)
+    .getEntry();
+  
+  private double kP = kp.getDouble(1.0);
+*/
+          
   private static double m_encoderOffset;
 
   // Gains are for example purposes only - must be determined for your own robot!
-  private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
+  private final PIDController m_drivePIDController = new PIDController(0.5, 0, 0);
+
 
   // Gains are for example purposes only - must be determined for your own robot!
   private final ProfiledPIDController m_turningPIDController =
       new ProfiledPIDController(
-          1,
+          0.3,
           0,
           0,
           new TrapezoidProfile.Constraints(
