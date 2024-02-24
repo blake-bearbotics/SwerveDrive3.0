@@ -12,11 +12,17 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+//import edu.wpi.first.networktables.GenericEntry;
+//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+//import edu.wpi.first.wpilibj.GenericHID;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 //import java.util.Map;
 
@@ -30,7 +36,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 //import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 
-public class SwerveModule {
+public class SwerveModule extends SubsystemBase{
   //private static final double kWheelRadius = 0.0508;
   //private static final int kEncoderResolution = 4096;
 
@@ -42,35 +48,20 @@ public class SwerveModule {
   private final CANSparkMax m_turningMotor;
 
   private final RelativeEncoder m_driveEncoder;
-  private final CoreCANcoder m_turningEncoder;
-
-  /**private ShuffleboardTab tab = Shuffleboard.getTab("Testing");
-  private GenericEntry kp = tab
-    .add("test title",1)
-    .withWidget(BuiltInWidgets.kPIDController)
-    .getEntry();
-  
-  private double kP = kp.getDouble(1.0);
-*/
-          
+  private final CoreCANcoder m_turningEncoder; 
+            
   private static double m_encoderOffset;
 
-  // Gains are for example purposes only - must be determined for your own robot!
-  private final PIDController m_drivePIDController = new PIDController(0.5, 0, 0);
+  private static double m_turningEncoderChannel;
 
+  private final PIDController m_drivePIDController= new PIDController(0.5,0,0);
 
-  // Gains are for example purposes only - must be determined for your own robot!
-  private final ProfiledPIDController m_turningPIDController =
-      new ProfiledPIDController(
-          0.3,
-          0,
-          0,
-          new TrapezoidProfile.Constraints(
-              kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
+  private final ProfiledPIDController m_turningPIDController;
+      
 
   // Gains are for example purposes only - must be determined for your own robot! Figure out what in the world is going on with this bc I don't have the energy right now.
-  private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(1, 3);
-  private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
+  private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0, 0);
+  private final SimpleMotorFeedforward m_turnFeedforward;
 
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
@@ -79,12 +70,15 @@ public class SwerveModule {
    * @param turningMotorChannel PWM output for the turning motor.
    * @param turningEncoderChannel DIO input for the turning encoder channel A
    * @param ecoderOffset encoder offset
+   * @param turningEncoderPID
    */
   public SwerveModule(
       int driveMotorChannel,
       int turningMotorChannel,
       int turningEncoderChannel,
-      double encoderOffset) {
+      double encoderOffset,
+      double[] turningEncoderPID,
+      double[] turningFeedforward) {
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
@@ -93,7 +87,25 @@ public class SwerveModule {
 
     m_encoderOffset = encoderOffset;
 
+    m_turningEncoderChannel = turningEncoderChannel;
+
+    m_turningPIDController = new ProfiledPIDController(
+          turningEncoderPID[0],
+          turningEncoderPID[1],
+          turningEncoderPID[2],
+          new TrapezoidProfile.Constraints(
+              kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
+
+    m_turnFeedforward = new SimpleMotorFeedforward(turningFeedforward[0], turningFeedforward[1]);
     
+    //ShuffleboardTab PIDLoopdeyLoops = Shuffleboard.getTab("PID Loopdey Loops");
+
+    /**PIDLoopdeyLoops.add("Testing", false)
+        .withPosition(0,1)
+        .withSize(1,1)
+        .withWidget(BuiltInWidgets.kBooleanBox)
+        .getEntry();*/
+
 
     // Set the distance per pulse for the drive encoder. We can simply use the
     // distance traveled for one rotation of the wheel divided by the encoder
@@ -138,12 +150,8 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState desiredState) {
     var encoderRotation = new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI);
 
-    // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation);
-
-    // Scale speed by cosine of angle error. This scales down movement perpendicular to the desired
-    // direction of travel that can occur when modules change directions. This results in smoother
-    // driving.
+    // Optimize the reference state to avoid spinning further than 90 degrees
     state.speedMetersPerSecond *= state.angle.minus(encoderRotation).getCos();
 
     // Calculate the drive output from the drive PID controller.
@@ -161,5 +169,8 @@ public class SwerveModule {
 
     m_driveMotor.setVoltage(driveOutput + driveFeedforward);
     m_turningMotor.setVoltage(turnOutput + turnFeedforward);
+
+    SmartDashboard.putNumber("encoder" + Double.toString(m_turningEncoderChannel), m_turningEncoder.getPosition().getValue());
+    System.out.println(Double.toString(m_turningEncoderChannel) + m_turningEncoder.getPosition().getValue().toString());
   }
 }

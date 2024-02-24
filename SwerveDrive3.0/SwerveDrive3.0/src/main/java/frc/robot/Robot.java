@@ -9,19 +9,22 @@ import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+//import edu.wpi.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Intake;
 
 public class Robot extends TimedRobot {
   private final XboxController m_controller = new XboxController(0);
   private final Drivetrain m_swerve = new Drivetrain();
-  private final Intake m_intake = new Intake();
+  //private final Intake m_intake = new Intake();
 
-  Trigger yButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
+  //Trigger yButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
 
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
@@ -36,8 +39,23 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void robotInit() {
+  }
+
+  @Override
+  public void testInit() {
+    teleopInit();
+  }
+
+  @Override
+  public void testPeriodic() {
+    teleopPeriodic();
+  }
+
+  @Override
   public void teleopPeriodic() {
     driveWithJoystick(true);
+
   }
 
   private void driveWithJoystick(boolean fieldRelative) {
@@ -63,9 +81,11 @@ public class Robot extends TimedRobot {
             * Drivetrain.kMaxAngularSpeed;
 
     m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative, getPeriod());
+    System.out.println("moving");
   }
-
+  /** 
   private void configureBindings() {
     m_controller.y().onTrue(m_intake.runIntake());
   }
+  */
 }

@@ -24,10 +24,10 @@ public class Drivetrain {
   private final Translation2d m_backLeftLocation = new Translation2d(-OperatorConstants.kWheelBase / 2.0, -OperatorConstants.kTrackWidth / 2.0);
   private final Translation2d m_backRightLocation = new Translation2d(OperatorConstants.kWheelBase / 2.0, -OperatorConstants.kTrackWidth / 2.0);
 
-  private final SwerveModule m_frontLeft = new SwerveModule(OperatorConstants.frontLeftDriveMotorChannel, OperatorConstants.frontLeftTurningMotorChannel, OperatorConstants.frontLeftEncoderChannel, OperatorConstants.frontLeftEncoderOffset);
-  private final SwerveModule m_frontRight = new SwerveModule(OperatorConstants.frontRightDriveMotorChannel, OperatorConstants.frontRightTurningMotorChannel, OperatorConstants.frontRightEncoderChannel, OperatorConstants.frontRightEncoderOffset);
-  private final SwerveModule m_backLeft = new SwerveModule(OperatorConstants.backLeftDriveMotorChannel, OperatorConstants.backLeftTurningMotorChannel, OperatorConstants.backLeftEncoderChannel, OperatorConstants.backLeftEncoderOffset);
-  private final SwerveModule m_backRight = new SwerveModule(OperatorConstants.backRightDriveMotorChannel, OperatorConstants.backRightTurningMotorChannel, OperatorConstants.backRightEncoderChannel, OperatorConstants.backRightEncoderOffset);
+  private final SwerveModule m_frontLeft = new SwerveModule(OperatorConstants.frontLeftDriveMotorChannel, OperatorConstants.frontLeftTurningMotorChannel, OperatorConstants.frontLeftEncoderChannel, OperatorConstants.frontLeftEncoderOffset, OperatorConstants.frontLeftEncoderPID, OperatorConstants.frontLeftTurningMotorFeedforward);
+  private final SwerveModule m_frontRight = new SwerveModule(OperatorConstants.frontRightDriveMotorChannel, OperatorConstants.frontRightTurningMotorChannel, OperatorConstants.frontRightEncoderChannel, OperatorConstants.frontRightEncoderOffset, OperatorConstants.frontRightEncoderPID, OperatorConstants.frontRightTurningMotorFeedforward);
+  private final SwerveModule m_backLeft = new SwerveModule(OperatorConstants.backLeftDriveMotorChannel, OperatorConstants.backLeftTurningMotorChannel, OperatorConstants.backLeftEncoderChannel, OperatorConstants.backLeftEncoderOffset, OperatorConstants.backLeftEncoderPID, OperatorConstants.backLeftTurningMotorFeedforward);
+  private final SwerveModule m_backRight = new SwerveModule(OperatorConstants.backRightDriveMotorChannel, OperatorConstants.backRightTurningMotorChannel, OperatorConstants.backRightEncoderChannel, OperatorConstants.backRightEncoderOffset, OperatorConstants.backRightEncoderPID, OperatorConstants.backRightTurningMotorFeedforward);
 
   private final Pigeon2 m_gyro = new Pigeon2(5);
 

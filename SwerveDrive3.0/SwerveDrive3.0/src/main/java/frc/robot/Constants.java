@@ -40,6 +40,15 @@ public final class Constants {
     public static final double backLeftEncoderOffset = -0.367920;//53.174;
     public static final double backRightEncoderOffset = -0.447266;//188.789;
 
+    public static final double[] frontLeftEncoderPID = {0.0, 0.0, 0.0};
+    public static final double[] frontRightEncoderPID = {0.0, 0.0, 0.0};
+    public static final double[] backLeftEncoderPID = {0.0, 0.0, 0.0};
+    public static final double[] backRightEncoderPID = {0.0, 0.0, 0.0};
+
+    public static final double[] frontLeftTurningMotorFeedforward = {0.0, 0.0};
+    public static final double[] frontRightTurningMotorFeedforward = {0.0, 0.0};
+    public static final double[] backLeftTurningMotorFeedforward = {0.0, 0.0};
+    public static final double[] backRightTurningMotorFeedforward = {0.0, 0.0};
 
   }
 }
