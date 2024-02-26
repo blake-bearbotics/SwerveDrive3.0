@@ -11,18 +11,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+//import edu.wpi.first.networktables.GenericEntry;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+//import edu.wpi.first.wpilibj.GenericHID;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.networktables.GenericEntry;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import edu.wpi.first.wpilibj.GenericHID;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 //import java.util.Map;
 
@@ -30,14 +30,11 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-//import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-//import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 
 public class SwerveModule extends SubsystemBase{
-  //private static final double kWheelRadius = 0.0508;
+  private static final double kWheelDiameter = 0.1016;
   //private static final int kEncoderResolution = 4096;
 
   private static final double kModuleMaxAngularVelocity = Drivetrain.kMaxAngularSpeed;
@@ -47,18 +44,14 @@ public class SwerveModule extends SubsystemBase{
   private final CANSparkMax m_driveMotor;
   private final CANSparkMax m_turningMotor;
 
-  private final RelativeEncoder m_driveEncoder;
-  private final CoreCANcoder m_turningEncoder; 
+  private final RelativeEncoder m_driveEncoder; // RPM
+  private final CoreCANcoder m_turningEncoder; //RPS
             
-  private static double m_encoderOffset;
-
-  private static double m_turningEncoderChannel;
+  private static double m_encoderOffset; //need to recalculate these
 
   private final PIDController m_drivePIDController= new PIDController(0.5,0,0);
-
   private final ProfiledPIDController m_turningPIDController;
       
-
   // Gains are for example purposes only - must be determined for your own robot! Figure out what in the world is going on with this bc I don't have the energy right now.
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0, 0);
   private final SimpleMotorFeedforward m_turnFeedforward;
@@ -87,8 +80,6 @@ public class SwerveModule extends SubsystemBase{
 
     m_encoderOffset = encoderOffset;
 
-    m_turningEncoderChannel = turningEncoderChannel;
-
     m_turningPIDController = new ProfiledPIDController(
           turningEncoderPID[0],
           turningEncoderPID[1],
@@ -97,24 +88,7 @@ public class SwerveModule extends SubsystemBase{
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
     m_turnFeedforward = new SimpleMotorFeedforward(turningFeedforward[0], turningFeedforward[1]);
-    
-    //ShuffleboardTab PIDLoopdeyLoops = Shuffleboard.getTab("PID Loopdey Loops");
-
-    /**PIDLoopdeyLoops.add("Testing", false)
-        .withPosition(0,1)
-        .withSize(1,1)
-        .withWidget(BuiltInWidgets.kBooleanBox)
-        .getEntry();*/
-
-
-    // Set the distance per pulse for the drive encoder. We can simply use the
-    // distance traveled for one rotation of the wheel divided by the encoder
-    // resolution.
-    //m_driveEncoder.setDistancePerPulse(2 * Math.PI * kWheelRadius / kEncoderResolution);
-
-    // Set the distance (in this case, angle) in radians per pulse for the turning encoder.
-    // This is the the angle through an entire rotation (2 * pi) divided by the
-    // encoder resolution.
+    // what on earth are the units I'm supposed to use here? Ask Trinh/Burton
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
@@ -126,9 +100,10 @@ public class SwerveModule extends SubsystemBase{
    *
    * @return The current state of the module.
    */
+
   public SwerveModuleState getState() {
-    return new SwerveModuleState(
-        m_driveEncoder.getVelocity(), new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI));
+    return new SwerveModuleState(m_driveEncoder.getVelocity()*kWheelDiameter*Math.PI*60, new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI)); 
+    //SwerveModuleState(speedMetersPerSecond, Rotation2d(radian value)), getVelocity returns RPM
   }
 
   /**
@@ -137,9 +112,8 @@ public class SwerveModule extends SubsystemBase{
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
-    System.out.println(m_driveEncoder.getPosition());
-    return new SwerveModulePosition(
-        m_driveEncoder.getPosition(), new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI));
+    return new SwerveModulePosition(m_driveEncoder.getPosition()*kWheelDiameter*Math.PI, new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI));
+    //SwerveModulePosition(distanceMeters, Rotation2d(radian value)), getPosition returns rotations
   }
 
   /**
@@ -148,7 +122,8 @@ public class SwerveModule extends SubsystemBase{
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    var encoderRotation = new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI);
+    var encoderRotation = new Rotation2d((m_turningEncoder.getPosition().getValue() - m_encoderOffset) * 2 * Math.PI);
+    //Rotation2d(radian value)CANcoder reads in rot/sec, method Rotation2d requires meters/sec
 
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation);
     // Optimize the reference state to avoid spinning further than 90 degrees
@@ -156,13 +131,14 @@ public class SwerveModule extends SubsystemBase{
 
     // Calculate the drive output from the drive PID controller.
     final double driveOutput =
-        m_drivePIDController.calculate(m_driveEncoder.getVelocity(), state.speedMetersPerSecond);
+        m_drivePIDController.calculate(m_driveEncoder.getVelocity() * kWheelDiameter * Math.PI * 60, 
+                                        state.speedMetersPerSecond);
 
     final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
     final double turnOutput =
-        m_turningPIDController.calculate((m_turningEncoder.getPosition().getValue() - m_encoderOffset)*2*Math.PI, state.angle.getRadians());
+        m_turningPIDController.calculate((m_turningEncoder.getPosition().getValue() - m_encoderOffset) * 2 * Math.PI, state.angle.getRadians());
 
     final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
@@ -170,7 +146,7 @@ public class SwerveModule extends SubsystemBase{
     m_driveMotor.setVoltage(driveOutput + driveFeedforward);
     m_turningMotor.setVoltage(turnOutput + turnFeedforward);
 
-    SmartDashboard.putNumber("encoder" + Double.toString(m_turningEncoderChannel), m_turningEncoder.getPosition().getValue());
-    System.out.println(Double.toString(m_turningEncoderChannel) + m_turningEncoder.getPosition().getValue().toString());
+    //SmartDashboard.putNumber("encoder" + Double.toString(m_turningEncoderChannel), m_turningEncoder.getPosition().getValue());
+    //System.out.println(Double.toString(m_turningEncoderChannel) + m_turningEncoder.getPosition().getValue().toString());
   }
 }
