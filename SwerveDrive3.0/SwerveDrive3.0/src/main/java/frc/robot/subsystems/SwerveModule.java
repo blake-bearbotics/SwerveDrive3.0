@@ -102,12 +102,6 @@ public class SwerveModule extends SubsystemBase{
    *
    * @return The current state of the module.
    */
-
-  public void zeroEncoders(double encoderOffset) {
-    //Rotation2d(radian value)CANcoder reads in rot/sec, method Rotation2d requires meters/sec
-    final double zeroTurnOutput = m_turningPIDController.calculate(m_turningEncoder.getPosition().getValue() % 1 * 2 * Math.PI, encoderOffset);
-    m_turningMotor.setVoltage(zeroTurnOutput);
-  }
    
   public SwerveModuleState getState() {
     return new SwerveModuleState(m_driveEncoder.getVelocity()*kWheelDiameter*Math.PI*60, new Rotation2d((m_turningEncoder.getPosition().getValue())*2*Math.PI)); 
