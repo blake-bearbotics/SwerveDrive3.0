@@ -25,21 +25,21 @@ public final class Constants {
 
     //Drive Motor IDs
     public static final int frontLeftDriveMotorChannel = 4;
+    public static final int backLeftDriveMotorChannel = 3;
     public static final int frontRightDriveMotorChannel = 1;
-    public static final int backLeftDriveMotorChannel = 2;
-    public static final int backRightDriveMotorChannel = 3;
+    public static final int backRightDriveMotorChannel = 2;
 
     //Turning Motor IDs
-    public static final int frontLeftTurningMotorChannel = 14;
-    public static final int frontRightTurningMotorChannel = 11;
-    public static final int backLeftTurningMotorChannel = 12;
-    public static final int backRightTurningMotorChannel = 13;
+    public static final int frontLeftTurningMotorChannel = frontLeftDriveMotorChannel + 10;
+    public static final int backLeftTurningMotorChannel = backLeftDriveMotorChannel + 10;
+    public static final int frontRightTurningMotorChannel = frontRightDriveMotorChannel + 10;
+    public static final int backRightTurningMotorChannel = backRightDriveMotorChannel + 10;
 
-    //Encoder IDs
-    public static final int frontLeftEncoderChannel = 24;
-    public static final int frontRightEncoderChannel = 21;
-    public static final int backLeftEncoderChannel = 22;
-    public static final int backRightEncoderChannel = 23;
+    //Encoder IDs left and right screwed up?
+    public static final int frontLeftEncoderChannel = frontLeftDriveMotorChannel + 20;
+    public static final int backLeftEncoderChannel = backLeftDriveMotorChannel + 20;
+    public static final int frontRightEncoderChannel = frontRightDriveMotorChannel + 20;
+    public static final int backRightEncoderChannel = backRightDriveMotorChannel + 20;
 
     //Swerve CANCoder Sensor offsets
     //CHANGE TO 0 first, reset the sensor, 

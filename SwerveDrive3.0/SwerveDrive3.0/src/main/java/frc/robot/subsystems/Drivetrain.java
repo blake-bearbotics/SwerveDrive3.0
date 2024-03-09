@@ -76,14 +76,14 @@ public class Drivetrain extends SubsystemBase {
     m_gyro.reset();
   }
 
-  public void zeroWheels() {
+  /** public void zeroWheels() {
     m_frontLeft.zeroEncoders(OperatorConstants.frontLeftEncoderOffset);
     m_frontRight.zeroEncoders(OperatorConstants.frontRightEncoderOffset);
     m_backLeft.zeroEncoders(OperatorConstants.backLeftEncoderOffset);
     m_backRight.zeroEncoders(OperatorConstants.backRightEncoderOffset);
   }
   //don't know if this is necessary
-
+  */
   /**
    * Method to drive the robot using joystick info.
    * Purely theoretical, not impacted by what the robot position actually is
