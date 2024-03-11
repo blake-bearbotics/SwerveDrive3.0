@@ -25,6 +25,7 @@ public class Drivetrain extends SubsystemBase {
   private final Translation2d m_backLeftLocation = new Translation2d(-OperatorConstants.kWheelBase / 2.0, -OperatorConstants.kTrackWidth / 2.0);
   private final Translation2d m_backRightLocation = new Translation2d(OperatorConstants.kWheelBase / 2.0, -OperatorConstants.kTrackWidth / 2.0);
 
+
   private final SwerveModule m_frontLeft = new SwerveModule(
     OperatorConstants.frontLeftDriveMotorChannel, 
     OperatorConstants.frontLeftTurningMotorChannel, 
@@ -73,17 +74,15 @@ public class Drivetrain extends SubsystemBase {
   
 
   public Drivetrain() {
-    m_gyro.reset();
-  }
+              m_gyro.reset();  }
 
-  /** public void zeroWheels() {
-    m_frontLeft.zeroEncoders(OperatorConstants.frontLeftEncoderOffset);
-    m_frontRight.zeroEncoders(OperatorConstants.frontRightEncoderOffset);
-    m_backLeft.zeroEncoders(OperatorConstants.backLeftEncoderOffset);
-    m_backRight.zeroEncoders(OperatorConstants.backRightEncoderOffset);
+  public void zeroWheels() {
+    m_frontLeft.setPosition(0);
+    m_frontRight.setPosition(0);
+    m_backLeft.setPosition(0);
+    m_backRight.setPosition(0);
   }
   //don't know if this is necessary
-  */
   /**
    * Method to drive the robot using joystick info.
    * Purely theoretical, not impacted by what the robot position actually is

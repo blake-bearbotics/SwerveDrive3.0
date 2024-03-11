@@ -6,14 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.PIDTesting;
+//import frc.robot.subsystems.PIDTesting;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj.XboxController.Button;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj2.command.Subsystem;
 //import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import edu.wpi.wpilibj2.command.button.CommandXboxController;
@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.XboxController;
 public class Robot extends TimedRobot {
   private final XboxController m_controller = new XboxController(0);
   private final Drivetrain m_swerve = new Drivetrain();
-  private final PIDTesting module_4 = new PIDTesting();
   //private final Intake m_intake = new Intake();
 
   //Trigger yButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
@@ -51,7 +50,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    module_4.setWheelPosition();
   }
 
   @Override
