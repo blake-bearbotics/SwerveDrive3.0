@@ -9,6 +9,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
@@ -61,6 +67,7 @@ public class Drivetrain extends SubsystemBase {
       new SwerveDriveKinematics(
           m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
+   private final SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(
           m_kinematics,
           m_gyro.getRotation2d(),
@@ -71,11 +78,14 @@ public class Drivetrain extends SubsystemBase {
             m_backRight.getPosition()
           });
 
-  public Drivetrain() {
-              m_gyro.reset();  }
 
+  public Drivetrain() {
+    m_gyro.reset();  }
+
+  public void setWheelPosition() {
     m_frontLeft.setPosition(0);
     m_frontRight.setPosition(0);
+    m_backLeft.setPosition(Math.PI);
     m_backRight.setPosition(0);
   }
   //don't know if this is necessary
@@ -91,6 +101,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void drive(
       double xSpeed, double ySpeed, double rot, boolean fieldRelative, double periodSeconds) {
+    System.out.println(ySpeed);
     //parameters dictate theoretical robot movement
     var swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
@@ -100,6 +111,7 @@ public class Drivetrain extends SubsystemBase {
                         xSpeed, ySpeed, rot, m_gyro.getRotation2d())
                     : new ChassisSpeeds(xSpeed, ySpeed, rot),
                 periodSeconds));
+    //System.out.println(swerveModuleStates[1]);
     //the block of code above separates robot movement into module movement
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     //normalizes all robots speeds and sets max speed to 4 m/s
@@ -107,7 +119,12 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_backLeft.setDesiredState(swerveModuleStates[2]);
     m_backRight.setDesiredState(swerveModuleStates[3]); //check this one more time
+
+    //Shuffleboard.getTab("Swerve Module States").add()
   }
+
+  
+  
 
   /** Updates the field relative position of the robot. */
   //what should be the units of the Pigeon?
