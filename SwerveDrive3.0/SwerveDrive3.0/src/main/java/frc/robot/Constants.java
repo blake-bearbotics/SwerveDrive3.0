@@ -41,6 +41,9 @@ public final class Constants {
     public static final int frontRightEncoderChannel = frontRightDriveMotorChannel + 20;
     public static final int backRightEncoderChannel = backRightDriveMotorChannel + 20;
 
+    public static final int leftArmMotorChannel = 0;
+    public static final int rightArmMotorChannel = 0;
+
     //Swerve CANCoder Sensor offsets
     //CHANGE TO 0 first, reset the sensor, 
     //PHYSICALLY zero out the motor 
@@ -73,6 +76,9 @@ public final class Constants {
     public static final double[] frontRightEncoderPID = {0.2, 0.0, 0.2};
     public static final double[] backLeftEncoderPID = {0.2, 0.0, 0.2};
     public static final double[] backRightEncoderPID = {0.2, 0.0, 0.2};
+
+    //Systems PID Values
+    public static final double[] ArmPID = {0.0, 0.0, 0.0};
 
     //Turning FeedForward Values
     public static final double[] frontLeftTurningMotorFeedforward = {0.15, 0.01}; //start ~2.5

@@ -47,8 +47,8 @@ public class SwerveModule extends SubsystemBase{
   private final RelativeEncoder m_driveEncoder; // RPM
   private final CoreCANcoder m_turningEncoder; //RPS
             
-  private double m_encoderOffset; //need to recalculate these
-  private static double m_moduleNumber;
+  //private double m_encoderOffset; //need to recalculate these
+  //private static double m_moduleNumber;
 
   private final PIDController m_drivePIDController= new PIDController(0.5,0,0);
   private final ProfiledPIDController m_turningPIDController;
@@ -96,7 +96,7 @@ public class SwerveModule extends SubsystemBase{
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI); //problem line??
     //in rad
   }
 
@@ -139,11 +139,10 @@ public class SwerveModule extends SubsystemBase{
     if (m_turningEncoder.getAbsolutePosition().getValue() < 0) {
       m_encoderRotation = 2 * Math.PI + m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     } else {
-      m_encoderRotation = (m_turningEncoder.getAbsolutePosition().getValue()) * 2 * Math.PI;
+      m_encoderRotation = m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     }
 
     var encoderRotation = new Rotation2d(m_encoderRotation);
-    
     //Rotation2d(radian value)CANcoder reads in rot/sec, method Rotation2d requires meters/sec
 
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation); 

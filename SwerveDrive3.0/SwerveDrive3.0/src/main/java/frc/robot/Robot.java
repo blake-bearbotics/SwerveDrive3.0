@@ -5,30 +5,32 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import frc.robot.subsystems.Drivetrain;
 //import frc.robot.subsystems.PIDTesting;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.XboxController.Button;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 // import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj2.command.Subsystem;
-//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import edu.wpi.wpilibj2.command.button.CommandXboxController;
-//import edu.wpi.first.wpilibj2.command.button.Trigger;
-//import frc.robot.subsystems.Intake;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Arm;
 
 public class Robot extends TimedRobot {
   private final XboxController m_controller = new XboxController(0);
   private final Drivetrain m_swerve = new Drivetrain();
   //private final PIDTesting module_4 = new PIDTesting();
-  //private final Intake m_intake = new Intake();
+  private final Intake m_intake = new Intake();
+  private final Arm m_arm = new Arm();
 
-  //Trigger yButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
+  Trigger yButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
 
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
@@ -63,6 +65,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     driveWithJoystick(true);
     m_swerve.updateOdometry();
+    runIntake();
+    setArm(0);
 
   }
 
@@ -90,9 +94,17 @@ public class Robot extends TimedRobot {
 
     m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative, getPeriod());
   }
-  /** 
-  private void configureBindings() {
-    m_controller.y().onTrue(m_intake.runIntake());
+
+private void runIntake() {
+  if (m_controller.getYButton()) {
+    m_intake.runIntake();
   }
-  */
+}
+
+private void setArm(double angle) {
+  if (m_controller.getXButton()) {
+    m_arm.setArm(angle);
+  }
+}
+
 }
