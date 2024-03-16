@@ -47,7 +47,6 @@ public class SwerveModule extends SubsystemBase{
   private final RelativeEncoder m_driveEncoder; // RPM
   private final CoreCANcoder m_turningEncoder; //RPS
             
-  private static double m_encoderOffset; //need to recalculate these
 
   private final PIDController m_drivePIDController= new PIDController(0.5,0,0);
   private final ProfiledPIDController m_turningPIDController;
@@ -102,7 +101,6 @@ public class SwerveModule extends SubsystemBase{
    *
    * @return The current state of the module.
    */
-
   public SwerveModuleState getState() {
     return new SwerveModuleState(m_driveEncoder.getVelocity()*kWheelDiameter*Math.PI*60, new Rotation2d((m_turningEncoder.getPosition().getValue())*2*Math.PI)); 
     //SwerveModuleState(speedMetersPerSecond, Rotation2d(radian value)), getVelocity returns RPM
@@ -120,7 +118,6 @@ public class SwerveModule extends SubsystemBase{
 
   public void setPosition(double angle) {
     final double turnOutput =
-        m_turningPIDController.calculate((m_turningEncoder.getAbsolutePosition().getValue() - m_encoderOffset) % 1 * 2 * Math.PI, angle);
         m_turningMotor.setVoltage(turnOutput);
 
   }
@@ -136,9 +133,6 @@ public class SwerveModule extends SubsystemBase{
 
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation); 
     // Optimize the reference state to avoid spinning further than 90 degrees
-    System.out.println(desiredState);
-    state.speedMetersPerSecond *= state.angle.minus(encoderRotation).getCos();
-
     // Calculate the drive output from the drive PID controller.
     final double driveOutput =
         m_drivePIDController.calculate(m_driveEncoder.getVelocity() * kWheelDiameter * Math.PI * 60, 
@@ -149,7 +143,6 @@ public class SwerveModule extends SubsystemBase{
     // Calculate the turning motor output from the turning PID controller.
     // Calculate encoder displacement by printing getPosition while wheel is zeroed (don't trust the Phoenix Tuner)
     final double turnOutput =
-        m_turningPIDController.calculate((m_turningEncoder.getAbsolutePosition().getValue() - m_encoderOffset) % 1 * 2 * Math.PI, state.angle.getRadians());
 
     final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);

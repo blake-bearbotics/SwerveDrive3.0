@@ -45,10 +45,6 @@ public final class Constants {
     //CHANGE TO 0 first, reset the sensor, 
     //PHYSICALLY zero out the motor 
     //place the OPPOSITE of the value
-    public static double frontLeftEncoderOffset = 17.666;
-    public static double frontRightEncoderOffset = 57.744;
-    public static double backLeftEncoderOffset = -165.059;
-    public static double backRightEncoderOffset = 67.061;
 
     //Constants for conversion maths
     public static final double secondsPer100ms = .1;
@@ -75,10 +71,6 @@ public final class Constants {
     public static final double[] backRightEncoderPID = {0.0, 0.0, 0.0};
 
     //Turning FeedForward Values
-    public static final double[] frontLeftTurningMotorFeedforward = {0.0, 0.0}; //start ~2.5
-    public static final double[] frontRightTurningMotorFeedforward = {0.0, 0.0};
-    public static final double[] backLeftTurningMotorFeedforward = {0.0, 0.0};
-    public static final double[] backRightTurningMotorFeedforward = {0.0, 0.0};
 
     //CTRE CAN-based constants (shouldn't need to change these)
     public static final int kDefaultPIDSlotID = 0;

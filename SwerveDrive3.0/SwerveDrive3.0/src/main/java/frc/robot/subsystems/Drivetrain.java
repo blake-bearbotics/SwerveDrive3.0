@@ -61,7 +61,6 @@ public class Drivetrain extends SubsystemBase {
       new SwerveDriveKinematics(
           m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
-  private final SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(
           m_kinematics,
           m_gyro.getRotation2d(),
@@ -71,15 +70,12 @@ public class Drivetrain extends SubsystemBase {
             m_backLeft.getPosition(),
             m_backRight.getPosition()
           });
-  
 
   public Drivetrain() {
               m_gyro.reset();  }
 
-  public void zeroWheels() {
     m_frontLeft.setPosition(0);
     m_frontRight.setPosition(0);
-    m_backLeft.setPosition(0);
     m_backRight.setPosition(0);
   }
   //don't know if this is necessary
