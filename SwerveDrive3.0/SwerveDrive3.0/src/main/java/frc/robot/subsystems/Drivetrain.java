@@ -25,11 +25,13 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 public class Drivetrain extends SubsystemBase {
   public static final double kMaxSpeed = 4.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
+  //check out chassis speeds
 
   private final Translation2d m_frontLeftLocation = new Translation2d(-OperatorConstants.kWheelBase / 2.0, OperatorConstants.kTrackWidth / 2.0);
   private final Translation2d m_frontRightLocation = new Translation2d(OperatorConstants.kWheelBase / 2.0, OperatorConstants.kTrackWidth / 2.0);
   private final Translation2d m_backLeftLocation = new Translation2d(-OperatorConstants.kWheelBase / 2.0, -OperatorConstants.kTrackWidth / 2.0);
   private final Translation2d m_backRightLocation = new Translation2d(OperatorConstants.kWheelBase / 2.0, -OperatorConstants.kTrackWidth / 2.0);
+  //check locations of the wheels
 
 
   private final SwerveModule m_frontLeft = new SwerveModule(
