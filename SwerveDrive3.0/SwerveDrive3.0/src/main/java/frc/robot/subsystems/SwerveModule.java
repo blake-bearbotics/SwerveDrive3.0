@@ -1,5 +1,13 @@
 package frc.robot.subsystems;
 
+//import java.util.Map;
+
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.core.CoreCANcoder;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -23,14 +31,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 //import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-
-//import java.util.Map;
-
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.core.CoreCANcoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import frc.robot.Constants.OperatorConstants;
 
 
 public class SwerveModule extends SubsystemBase{
@@ -51,7 +52,12 @@ public class SwerveModule extends SubsystemBase{
   //private static double m_moduleNumber;
 
   private final PIDController m_drivePIDController= new PIDController(0.5,0,0);
-  private final ProfiledPIDController m_turningPIDController;
+  private final ProfiledPIDController m_turningPIDController = new ProfiledPIDController(
+          OperatorConstants.turningEncoderPID[0],
+          OperatorConstants.turningEncoderPID[1],
+          OperatorConstants.turningEncoderPID[2],
+          new TrapezoidProfile.Constraints(
+              kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
       
   // Gains are for example purposes only - must be determined for your own robot! Figure out what in the world is going on with this bc I don't have the energy right now.
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0, 0);
@@ -70,8 +76,6 @@ public class SwerveModule extends SubsystemBase{
       int driveMotorChannel,
       int turningMotorChannel,
       int turningEncoderChannel,
-      double encoderOffset,
-      double[] turningEncoderPID,
       double[] turningFeedforward) {
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
@@ -79,17 +83,6 @@ public class SwerveModule extends SubsystemBase{
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = new CANcoder(turningEncoderChannel);
-
-    //m_encoderOffset = encoderOffset;
-
-    //m_moduleNumber = driveMotorChannel;
-
-    m_turningPIDController = new ProfiledPIDController(
-          turningEncoderPID[0],
-          turningEncoderPID[1],
-          turningEncoderPID[2],
-          new TrapezoidProfile.Constraints(
-              kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
 
     m_turnFeedforward = new SimpleMotorFeedforward(turningFeedforward[0], turningFeedforward[1]);
     // what on earth are the units I'm supposed to use here? Ask Trinh/Burton
@@ -137,18 +130,17 @@ public class SwerveModule extends SubsystemBase{
     double m_encoderRotation = 0;
     
     if (m_turningEncoder.getAbsolutePosition().getValue() < 0) {
-      m_encoderRotation = 2 * Math.PI + m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
+      m_encoderRotation = -m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     } else {
       m_encoderRotation = m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     }
 
-    var encoderRotation = new Rotation2d(m_encoderRotation);
+    var encoderRotation = new Rotation2d(m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI);
     //Rotation2d(radian value)CANcoder reads in rot/sec, method Rotation2d requires meters/sec
-
+    
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation); 
     // Optimize the reference state to avoid spinning further than 90 degrees
     
-    System.out.println(m_encoderRotation - state.angle.getRadians());
 
     //state.speedMetersPerSecond *= state.angle.minus(encoderRotation).getCos();
     // Calculate the drive output from the drive PID controller.

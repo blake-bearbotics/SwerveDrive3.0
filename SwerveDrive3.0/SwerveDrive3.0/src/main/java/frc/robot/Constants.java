@@ -53,18 +53,6 @@ public final class Constants {
     public static double backLeftEncoderOffset = 0;
     public static double backRightEncoderOffset = 0;
 
-    //Constants for conversion maths
-    public static final double secondsPer100ms = .1;
-    public static final double turningEncoderTicksPerRotation = 4096;
-    public static final double turningEncoderRotationsPerTick= 360/turningEncoderTicksPerRotation;
-    public static final double TICKSperTALONFX_Rotation = 2048;
-    //public static final double DRIVE_MOTOR_TICKSperREVOLUTION = DRIVE_MOTOR_GEARING*TICKSperTALONFX_Rotation;
-    public static final double metersPerWheelRevolution = 2*Math.PI*kWheelRadius;
-    public static final double metersPerRobotRevolution =  2*Math.PI*(kWheelBase/2*Math.sqrt(2));
-    public static final double maxSpeedMetersPerSecond = 0.0; //figure this out later
-    public static final double maxSpeedRadiansPerSecond = maxSpeedMetersPerSecond/metersPerRobotRevolution*(2*Math.PI);
-    //public static final double TICKSperTALONFX_DEGREE = TICKSperTALONFX_Rotation*STEERING_MOTOR_GEARING/360;
-
     //Swerve Drive Constants
     public static final boolean defaultFieldRelativeDrive = true;
     public static final double robotHoldAngleKP = 10; //Start at .7 and see where you go from there
@@ -72,10 +60,7 @@ public final class Constants {
 	  public static final double defaultHoldRobotAngleSetpoint = 0; 
 
     //Turning PID values
-    public static final double[] frontLeftEncoderPID = {0.2, 0.0, 0.2};
-    public static final double[] frontRightEncoderPID = {0.2, 0.0, 0.2};
-    public static final double[] backLeftEncoderPID = {0.2, 0.0, 0.2};
-    public static final double[] backRightEncoderPID = {0.2, 0.0, 0.2};
+    public static final double[] turningEncoderPID = {0.2, 0.0, 0.2};
 
     //Systems PID Values
     public static final double[] ArmPID = {0.0, 0.0, 0.0};
