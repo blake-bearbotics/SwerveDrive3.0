@@ -1,13 +1,16 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-public class Intake {
+public class Intake extends SubsystemBase{
     private final CANSparkMax m_intakeMotor;
 
-    public Intake() {
-        m_intakeMotor = new CANSparkMax(1, MotorType.kBrushless); // change devideID to whatever port it is
+    public Intake(int deviceID) {
+        m_intakeMotor = new CANSparkMax(deviceID, MotorType.kBrushless); // change devideID to whatever port it is
     }
 
     public void runIntake() {

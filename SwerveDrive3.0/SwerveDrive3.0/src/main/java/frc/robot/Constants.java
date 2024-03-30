@@ -41,40 +41,21 @@ public final class Constants {
     public static final int frontRightEncoderChannel = frontRightDriveMotorChannel + 20;
     public static final int backRightEncoderChannel = backRightDriveMotorChannel + 20;
 
-    public static final int leftArmMotorChannel = 0;
-    public static final int rightArmMotorChannel = 0;
-
-    //Swerve CANCoder Sensor offsets
-    //CHANGE TO 0 first, reset the sensor, 
-    //PHYSICALLY zero out the motor 
-    //place the OPPOSITE of the value
-    public static double frontLeftEncoderOffset = 0;
-    public static double frontRightEncoderOffset = 0;
-    public static double backLeftEncoderOffset = 0;
-    public static double backRightEncoderOffset = 0;
-
-    //Swerve Drive Constants
-    public static final boolean defaultFieldRelativeDrive = true;
-    public static final double robotHoldAngleKP = 10; //Start at .7 and see where you go from there
-    public static final boolean defaultHoldRobotAngle = true;
-	  public static final double defaultHoldRobotAngleSetpoint = 0; 
-
     //Turning PID values
-    public static final double[] turningEncoderPID = {0.2, 0.0, 0.2};
+    public static final double[] turningEncoderPID = {2.0, 0.0, 0.0};
 
-    //Systems PID Values
+    //Arm Subsystem Constants
     public static final double[] ArmPID = {0.0, 0.0, 0.0};
 
-    //Turning FeedForward Values
-    public static final double[] frontLeftTurningMotorFeedforward = {0.15, 0.01}; //start ~2.5
-    public static final double[] frontRightTurningMotorFeedforward = {0.15, 0.01};
-    public static final double[] backLeftTurningMotorFeedforward = {0.15, 0.01};
-    public static final double[] backRightTurningMotorFeedforward = {0.15, 0.01};
+    public static final int leftArmMotorChannel = 6;
+    public static final int rightArmMotorChannel = 16;
 
-    //CTRE CAN-based constants (shouldn't need to change these)
-    public static final int kDefaultPIDSlotID = 0;
-    public static final int kDefaultTimeout = 30;//milliseconds
-    public static final int kDefaultClosedLoopError = 1; //degrees 
+    public static final double speakerAngle = 0.0;
+    public static final double ampAngle = 0.0;
+    public static final double pickupAngle = 0.0;
+
+    //Turning FeedForward Values
+    public static final double[] turningMotorFeedforward = {0.14, 0.38};
 
   }
 }

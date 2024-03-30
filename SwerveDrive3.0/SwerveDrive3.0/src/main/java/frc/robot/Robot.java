@@ -5,30 +5,16 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-//import frc.robot.subsystems.PIDTesting;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.wpilibj.XboxController.Button;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-// import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-//import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-//import edu.wpi.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Arm;
 
 public class Robot extends TimedRobot {
   private final XboxController m_controller = new XboxController(0);
   private final Drivetrain m_swerve = new Drivetrain();
-  //private final PIDTesting module_4 = new PIDTesting();
-  private final Intake m_intake = new Intake();
-  private final Arm m_arm = new Arm();
 
   Trigger yButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
 
@@ -38,7 +24,6 @@ public class Robot extends TimedRobot {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
-  public Field2d m_field = new Field2d();
 
   @Override
   public void autonomousPeriodic() {
@@ -52,24 +37,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    SmartDashboard.putData("Field", m_field);
     teleopInit();
   }
 
   @Override
   public void testPeriodic() {
-    m_swerve.setWheelPosition();
+
   }
 
   @Override
   public void teleopPeriodic() {
     driveWithJoystick(true);
     m_swerve.updateOdometry();
-    runIntake();
-    setArm(0);
 
   }
 
+  //check on some of this stuff
   private void driveWithJoystick(boolean fieldRelative) {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
@@ -94,17 +77,5 @@ public class Robot extends TimedRobot {
 
     m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative, getPeriod());
   }
-
-private void runIntake() {
-  if (m_controller.getYButton()) {
-    m_intake.runIntake();
-  }
-}
-
-private void setArm(double angle) {
-  if (m_controller.getXButton()) {
-    m_arm.setArm(angle);
-  }
-}
 
 }

@@ -20,23 +20,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import edu.wpi.first.networktables.GenericEntry;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-//import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.GenericHID;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.networktables.GenericEntry;
-//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import frc.robot.Constants.OperatorConstants;
 
 
 public class SwerveModule extends SubsystemBase{
   private static final double kWheelDiameter = 0.1016;
-  //private static final int kEncoderResolution = 4096;
 
   private static final double kModuleMaxAngularVelocity = Drivetrain.kMaxAngularSpeed;
   private static final double kModuleMaxAngularAcceleration =
@@ -47,9 +35,6 @@ public class SwerveModule extends SubsystemBase{
 
   private final RelativeEncoder m_driveEncoder; // RPM
   private final CoreCANcoder m_turningEncoder; //RPS
-            
-  //private double m_encoderOffset; //need to recalculate these
-  //private static double m_moduleNumber;
 
   private final PIDController m_drivePIDController= new PIDController(0.5,0,0);
   private final ProfiledPIDController m_turningPIDController = new ProfiledPIDController(
@@ -61,7 +46,7 @@ public class SwerveModule extends SubsystemBase{
       
   // Gains are for example purposes only - must be determined for your own robot! Figure out what in the world is going on with this bc I don't have the energy right now.
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0, 0);
-  private final SimpleMotorFeedforward m_turnFeedforward;
+  private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(OperatorConstants.turningMotorFeedforward[0], OperatorConstants.turningMotorFeedforward[1]);
 
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
@@ -75,23 +60,19 @@ public class SwerveModule extends SubsystemBase{
   public SwerveModule(
       int driveMotorChannel,
       int turningMotorChannel,
-      int turningEncoderChannel,
-      double[] turningFeedforward) {
+      int turningEncoderChannel)  {
+
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-    //m_turningMotor.setInverted(false);
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = new CANcoder(turningEncoderChannel);
 
-    m_turnFeedforward = new SimpleMotorFeedforward(turningFeedforward[0], turningFeedforward[1]);
-    // what on earth are the units I'm supposed to use here? Ask Trinh/Burton
-
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI); //problem line??
-    //in rad
-  }
+    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+    }
 
   /**
    * Returns the current state of the module.
@@ -130,38 +111,34 @@ public class SwerveModule extends SubsystemBase{
     double m_encoderRotation = 0;
     
     if (m_turningEncoder.getAbsolutePosition().getValue() < 0) {
-      m_encoderRotation = -m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
+      m_encoderRotation = 2 * Math.PI - m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     } else {
       m_encoderRotation = m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     }
 
-    var encoderRotation = new Rotation2d(m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI);
+    var encoderRotation = new Rotation2d(m_encoderRotation);
     //Rotation2d(radian value)CANcoder reads in rot/sec, method Rotation2d requires meters/sec
     
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation); 
     // Optimize the reference state to avoid spinning further than 90 degrees
     
-
     //state.speedMetersPerSecond *= state.angle.minus(encoderRotation).getCos();
     // Calculate the drive output from the drive PID controller.
     final double driveOutput =
-        m_drivePIDController.calculate(m_driveEncoder.getVelocity() * kWheelDiameter * Math.PI * 60, 
+        m_drivePIDController.calculate(m_driveEncoder.getVelocity() * kWheelDiameter * Math.PI * 60 / OperatorConstants.kDriveMotorGearRatio, 
                                         state.speedMetersPerSecond);
-    
 
     final double driveFeedforward = m_driveFeedforward.calculate(state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
-    // Calculate encoder displacement by printing getPosition while wheel is zeroed (don't trust the Phoenix Tuner)
     final double turnOutput =
-      //  m_turningPIDController.calculate((m_turningEncoder.getAbsolutePosition().getValue() - m_encoderOffset) * 2 * Math.PI, state.angle.getRadians());
-        m_turningPIDController.calculate(m_encoderRotation, state.angle.getRadians());
+            m_turningPIDController.calculate(m_encoderRotation, state.angle.getRadians());
 
     final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
 
 
     m_driveMotor.setVoltage(driveOutput + driveFeedforward);
-    m_turningMotor.setVoltage(turnOutput + turnFeedforward);
+    m_turningMotor.setVoltage(-(turnOutput + turnFeedforward));
   }
 }

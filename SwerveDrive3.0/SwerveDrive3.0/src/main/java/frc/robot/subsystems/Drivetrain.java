@@ -9,6 +9,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.math.kinematics.SwerveModuleState;
 //import edu.wpi.first.networktables.NetworkTableInstance;
 //import edu.wpi.first.networktables.StructArrayPublisher;
@@ -23,6 +25,9 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 /** Represents a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
+
+  private Field2d m_field = new Field2d();
+
   public static final double kMaxSpeed = 4.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
   //check out chassis speeds
@@ -37,23 +42,19 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule m_frontLeft = new SwerveModule(
     OperatorConstants.frontLeftDriveMotorChannel, 
     OperatorConstants.frontLeftTurningMotorChannel, 
-    OperatorConstants.frontLeftEncoderChannel, 
-    OperatorConstants.frontLeftTurningMotorFeedforward);
+    OperatorConstants.frontLeftEncoderChannel);
   private final SwerveModule m_frontRight = new SwerveModule(
     OperatorConstants.frontRightDriveMotorChannel, 
     OperatorConstants.frontRightTurningMotorChannel, 
-    OperatorConstants.frontRightEncoderChannel, 
-    OperatorConstants.frontRightTurningMotorFeedforward);
+    OperatorConstants.frontRightEncoderChannel);
   private final SwerveModule m_backLeft = new SwerveModule(
     OperatorConstants.backLeftDriveMotorChannel, 
     OperatorConstants.backLeftTurningMotorChannel, 
-    OperatorConstants.backLeftEncoderChannel, 
-    OperatorConstants.backLeftTurningMotorFeedforward);
+    OperatorConstants.backLeftEncoderChannel);
   private final SwerveModule m_backRight = new SwerveModule(
     OperatorConstants.backRightDriveMotorChannel, 
     OperatorConstants.backRightTurningMotorChannel, 
-    OperatorConstants.backRightEncoderChannel, 
-    OperatorConstants.backRightTurningMotorFeedforward);
+    OperatorConstants.backRightEncoderChannel);
 
   private final Pigeon2 m_gyro = new Pigeon2(5);
 
@@ -105,7 +106,8 @@ public class Drivetrain extends SubsystemBase {
                         xSpeed, ySpeed, rot, m_gyro.getRotation2d())
                     : new ChassisSpeeds(xSpeed, ySpeed, rot),
                 periodSeconds));
-    //System.out.println(swerveModuleStates[1]);
+
+    SmartDashboard.putData("Field", m_field);
     //the block of code above separates robot movement into module movement
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     //normalizes all robots speeds and sets max speed to 4 m/s
@@ -114,7 +116,6 @@ public class Drivetrain extends SubsystemBase {
     m_backLeft.setDesiredState(swerveModuleStates[2]);
     m_backRight.setDesiredState(swerveModuleStates[3]); //check this one more time
 
-    //Shuffleboard.getTab("Swerve Module States").add()
   }
 
   
