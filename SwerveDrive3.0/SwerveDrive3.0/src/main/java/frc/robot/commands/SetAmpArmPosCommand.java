@@ -5,9 +5,11 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Arm;
 
 public class SetAmpArmPosCommand extends Command{
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
-    public Arm arm;
-    public void setAmpArmPos(Arm arm) {
+    private final Arm arm;
+    
+    public SetAmpArmPosCommand(Arm arm) {
         this.arm = arm;
         this.addRequirements(arm);
     }

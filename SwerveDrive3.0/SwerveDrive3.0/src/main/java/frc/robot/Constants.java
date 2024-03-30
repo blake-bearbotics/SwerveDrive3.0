@@ -54,6 +54,20 @@ public final class Constants {
     public static final double ampAngle = 0.0;
     public static final double pickupAngle = 0.0;
 
+    //Intake Constants
+    public static final int leftIntakeMotorChannel = 17;
+    public static final int rightIntakeMotorChannel = 7;
+    public static final int indexerMotorChannel = 19;
+    public static final double intakeSpeed = 0.0;
+
+    //Shooter Constants
+    public static final int leftShooterMotorChannel = 18;
+    public static final int rightShooterMotorChannel = 8;
+    public static final double ampSpeed = 0.0;
+    public static final double speakerSpeed = 0.0;
+    
+
+
     //Turning FeedForward Values
     public static final double[] turningMotorFeedforward = {0.14, 0.38};
 
