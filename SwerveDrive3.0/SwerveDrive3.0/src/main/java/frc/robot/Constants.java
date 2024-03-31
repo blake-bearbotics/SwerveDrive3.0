@@ -69,7 +69,7 @@ public final class Constants {
 
 
     //Turning FeedForward Values
-    public static final double[] turningMotorFeedforward = {0.14, 0.38};
+    public static final double[] turningMotorFeedforward = {0.125, 0.356};
 
   }
 }

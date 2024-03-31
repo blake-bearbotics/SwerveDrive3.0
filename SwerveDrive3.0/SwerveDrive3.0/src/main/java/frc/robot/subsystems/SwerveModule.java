@@ -46,7 +46,7 @@ public class SwerveModule extends SubsystemBase{
       
   // Gains are for example purposes only - must be determined for your own robot! Figure out what in the world is going on with this bc I don't have the energy right now.
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0, 0);
-  private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(OperatorConstants.turningMotorFeedforward[0], OperatorConstants.turningMotorFeedforward[1]);
+  private final SimpleMotorFeedforward m_turnFeedforward;
 
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
@@ -60,13 +60,16 @@ public class SwerveModule extends SubsystemBase{
   public SwerveModule(
       int driveMotorChannel,
       int turningMotorChannel,
-      int turningEncoderChannel)  {
+      int turningEncoderChannel,
+      double [] turningFeedforward)  {
 
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = new CANcoder(turningEncoderChannel);
+
+    m_turnFeedforward = new SimpleMotorFeedforward(turningFeedforward[0], turningFeedforward[1]);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
@@ -111,7 +114,7 @@ public class SwerveModule extends SubsystemBase{
     double m_encoderRotation = 0;
     
     if (m_turningEncoder.getAbsolutePosition().getValue() < 0) {
-      m_encoderRotation = 2 * Math.PI - m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
+      m_encoderRotation = 2 * Math.PI + m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     } else {
       m_encoderRotation = m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
     }
