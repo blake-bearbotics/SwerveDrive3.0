@@ -6,51 +6,43 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
 
-public class Arm extends SubsystemBase{
-    private final CANSparkMax m_leftArmMotor = new CANSparkMax(OperatorConstants.leftArmMotorChannel, MotorType.kBrushless);
-    private final CANSparkMax m_rightArmMotor = new CANSparkMax(OperatorConstants.rightArmMotorChannel, MotorType.kBrushless);
+public class Climber extends SubsystemBase{
+    private final CANSparkMax m_climber = new CANSparkMax(OperatorConstants.leftArmMotorChannel, MotorType.kBrushless);
 
-    private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(1);
-    private final SimpleMotorFeedforward m_armFeedforward = new SimpleMotorFeedforward(0, 0);
+    private final Encoder climberEncoder = new Encoder(OperatorConstants.armEncoderChannel[1],OperatorConstants.armEncoderChannel[1]); //wrong kind of encoder
+    private final SimpleMotorFeedforward m_climberFeedforward = new SimpleMotorFeedforward(0, 0);
 
     //set first
     private final double kArmMaxAngularVelocity = 0.0;
     private final double kArmMaxAngularAcceleration = 0.0;
 
 
-    private final ProfiledPIDController m_armPIDController = new ProfiledPIDController(
+    private final ProfiledPIDController m_climberPIDController = new ProfiledPIDController(
         OperatorConstants.ArmPID[0],
         OperatorConstants.ArmPID[1],
         OperatorConstants.ArmPID[2],
           new TrapezoidProfile.Constraints(
               kArmMaxAngularVelocity, kArmMaxAngularAcceleration));
 
-    public Arm() {
+    public Climber() {
         
     }
 
-    public void setArm(double armAngle) {
-        double armOutput = m_armPIDController.calculate(armEncoder.getAbsolutePosition(), armAngle);
-        double feedForward = m_armFeedforward.calculate(m_armPIDController.getSetpoint().velocity);
-        m_leftArmMotor.setVoltage(armOutput + feedForward);
-        m_rightArmMotor.setVoltage(-(armOutput + feedForward));
+    public void moveClimber(double distance) {
+        //figure out the length of the rope that is pulled back and forth (should be half)
+        double armOutput = m_climberPIDController.calculate(climberEncoder.getDistance(), distance);
+        double feedForward = m_climberFeedforward.calculate(m_climberPIDController.getSetpoint().velocity);
+        m_climber.setVoltage(armOutput + feedForward);
     }
         
     public void stopArm() {
-        m_leftArmMotor.set(0.0);
-        m_rightArmMotor.set(0.0);
-
-    }
-
-    public void printArmPosition() {
-        Shuffleboard.getTab("Arm Angle").add("arm position", armEncoder.getAbsolutePosition());
+        m_climber.set(0.0);
     }
 
   /**
@@ -79,7 +71,6 @@ public class Arm extends SubsystemBase{
 
   @Override
   public void periodic() {
-    // the pid command needs to be a periodic function (right?), so figure out how to make it one (or see if it already is?)
   }
 
   @Override

@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AmpScoreCommand;
+import frc.robot.commands.HopperWheelCommand;
+import frc.robot.commands.PrintArmPositionCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.SetAmpArmPosCommand;
 import frc.robot.commands.SetPickupArmPosCommand;
@@ -70,6 +72,10 @@ public class RobotContainer {
     //Speaker
     m_driverController.b().onTrue(new SetSpeakerArmPosCommand(m_arm));
     m_driverController.a().whileTrue(new SpeakerCommand(m_shooter));
+    m_driverController.x().onTrue(new HopperWheelCommand(m_shooter));
+
+    //testing stuff
+    m_driverController.y().onTrue(new PrintArmPositionCommand(m_arm));
   }
 
   /**

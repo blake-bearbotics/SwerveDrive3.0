@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
+  private RobotContainer m_robotContainer;
 
 
   @Override
@@ -33,6 +35,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    m_robotContainer = new RobotContainer();
   }
 
   @Override
@@ -42,11 +45,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-
+    CommandScheduler.getInstance().run();
+    driveWithJoystick(true);
+    m_swerve.updateOdometry();
   }
 
   @Override
   public void teleopPeriodic() {
+    CommandScheduler.getInstance().run();
     driveWithJoystick(true);
     m_swerve.updateOdometry();
 

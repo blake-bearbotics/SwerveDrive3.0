@@ -42,19 +42,23 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule m_frontLeft = new SwerveModule(
     OperatorConstants.frontLeftDriveMotorChannel, 
     OperatorConstants.frontLeftTurningMotorChannel, 
-    OperatorConstants.frontLeftEncoderChannel);
+    OperatorConstants.frontLeftEncoderChannel,
+    OperatorConstants.frontLeftTurningMotorFeedforward);
   private final SwerveModule m_frontRight = new SwerveModule(
     OperatorConstants.frontRightDriveMotorChannel, 
     OperatorConstants.frontRightTurningMotorChannel, 
-    OperatorConstants.frontRightEncoderChannel);
+    OperatorConstants.frontRightEncoderChannel,
+    OperatorConstants.frontRightTurningMotorFeedforward);
   private final SwerveModule m_backLeft = new SwerveModule(
     OperatorConstants.backLeftDriveMotorChannel, 
     OperatorConstants.backLeftTurningMotorChannel, 
-    OperatorConstants.backLeftEncoderChannel);
+    OperatorConstants.backLeftEncoderChannel,
+    OperatorConstants.backLeftTurningMotorFeedforward);
   private final SwerveModule m_backRight = new SwerveModule(
     OperatorConstants.backRightDriveMotorChannel, 
     OperatorConstants.backRightTurningMotorChannel, 
-    OperatorConstants.backRightEncoderChannel);
+    OperatorConstants.backRightEncoderChannel,
+    OperatorConstants.backRightTurningMotorFeedforward);
 
   private final Pigeon2 m_gyro = new Pigeon2(5);
 

@@ -43,6 +43,8 @@ public final class Constants {
 
     //Turning PID values
     public static final double[] turningEncoderPID = {2.0, 0.0, 0.0};
+    //kp is volts/degrees (in radians)
+    //kd is volts*time/degrees
 
     //Arm Subsystem Constants
     public static final double[] ArmPID = {0.0, 0.0, 0.0};
@@ -65,11 +67,16 @@ public final class Constants {
     public static final int rightShooterMotorChannel = 8;
     public static final double ampSpeed = 0.0;
     public static final double speakerSpeed = 0.0;
-    
-
 
     //Turning FeedForward Values
-    public static final double[] turningMotorFeedforward = {0.125, 0.356};
+    public static final double[] frontLeftTurningMotorFeedforward = {0.125, 0.356};
+    public static final double[] frontRightTurningMotorFeedforward = {0.125, 0.356};
+    public static final double[] backLeftTurningMotorFeedforward = {0.125, 0.356};
+    public static final double[] backRightTurningMotorFeedforward = {0.125, 0.356};
+
+    //Arm Constants
+    public static final int[] armEncoderChannel = {0,0};
+    public static final double armDistance = 0.0;
 
   }
 }

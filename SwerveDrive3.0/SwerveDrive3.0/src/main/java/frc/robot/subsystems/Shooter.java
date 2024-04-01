@@ -39,7 +39,6 @@ public class Shooter extends SubsystemBase{
         indexerMotor.set(0.0);
     }
     
-
     /**
    * Example command factory method.
    *
