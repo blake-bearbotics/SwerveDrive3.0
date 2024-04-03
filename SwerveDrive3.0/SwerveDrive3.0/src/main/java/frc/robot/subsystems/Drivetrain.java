@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -9,6 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -22,6 +25,10 @@ import frc.robot.Constants.OperatorConstants;
 
 //import edu.wpi.first.wpilibj.AnalogGyro;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 /** Represents a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
@@ -79,14 +86,36 @@ public class Drivetrain extends SubsystemBase {
 
 
   public Drivetrain() {
-    m_gyro.reset();  }
+    m_gyro.reset();  
+  
+    AutoBuilder.configureHolonomic(
+            this::getPose2d, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                    4.5, // Max module speed, in m/s
+                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                    new ReplanningConfig() // Default path replanning config. See the API for the options here
+            ),
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-  public void setWheelPosition() {
-    m_frontLeft.setPosition(0);
-    m_frontRight.setPosition(0);
-    m_backLeft.setPosition(Math.PI);
-    m_backRight.setPosition(0);
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this // Reference to this subsystem to set requirements
+    );
+  
   }
+
   //don't know if this is necessary
   /**
    * Method to drive the robot using joystick info.
@@ -100,7 +129,6 @@ public class Drivetrain extends SubsystemBase {
    */
   public void drive(
       double xSpeed, double ySpeed, double rot, boolean fieldRelative, double periodSeconds) {
-    System.out.println(ySpeed);
     //parameters dictate theoretical robot movement
     var swerveModuleStates =
         m_kinematics.toSwerveModuleStates(
@@ -119,11 +147,37 @@ public class Drivetrain extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_backLeft.setDesiredState(swerveModuleStates[2]);
     m_backRight.setDesiredState(swerveModuleStates[3]); //check this one more time
-
   }
 
-  
-  
+
+  public Pose2d getPose2d() {
+    return m_odometry.getPoseMeters();
+  }
+
+  public void resetPose(Pose2d pose2d) {
+    m_odometry.resetPosition(m_gyro.getRotation2d(), 
+           new SwerveModulePosition[] {
+          m_frontLeft.getPosition(), //getPosition() comes from SwerveModule
+          m_frontRight.getPosition(),
+          m_backLeft.getPosition(),
+          m_backRight.getPosition()}, 
+          pose2d);
+  }
+
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return m_kinematics.toChassisSpeeds(m_frontLeft.getState(), 
+      m_frontRight.getState(), 
+      m_backLeft.getState(), 
+      m_backRight.getState());
+  }
+
+  public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    drive(chassisSpeeds.vxMetersPerSecond, 
+      chassisSpeeds.vyMetersPerSecond, 
+      chassisSpeeds.omegaRadiansPerSecond, 
+      false, 
+      0.02); //is period correct??
+  }
 
   /** Updates the field relative position of the robot. */
   //what should be the units of the Pigeon?

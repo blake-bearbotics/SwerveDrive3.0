@@ -28,16 +28,13 @@ public class Shooter extends SubsystemBase{
     public void stopShooter() {
         leftShooterMotor.set(0.0);
         rightShooterMotor.set(0.0);
-        indexerMotor.set(0.0);
     }
 
     public void runIndexer() {
-        indexerMotor.set(OperatorConstants.intakeSpeed);
+        indexerMotor.set(OperatorConstants.intakeSpeed); // make its own subsystem?
     }
 
-    public void stopIndexer() {
-        indexerMotor.set(0.0);
-    }
+
     
     /**
    * Example command factory method.

@@ -22,7 +22,7 @@ public class LowerClimberCommand extends Command{
 
     @Override
     public void execute(){
-        climber.moveClimber(-OperatorConstants.armDistance);
+        climber.moveClimber(-OperatorConstants.climberDistance);
     }
 
     @Override

@@ -11,16 +11,18 @@ import frc.robot.commands.PrintArmPositionCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.SetAmpArmPosCommand;
 import frc.robot.commands.SetPickupArmPosCommand;
-//import frc.robot.commands.Autos;
-//import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SetSpeakerArmPosCommand;
 import frc.robot.commands.SpeakerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-//import frc.robot.subsystems.ExampleSubsystem;
-//import frc.robot.subsystems.Telemetry;
-//import edu.wpi.first.wpilibj2.command.Command;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -35,6 +37,7 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
   private final Shooter m_shooter = new Shooter();
+  private final SendableChooser<Command> autoChooser;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -43,6 +46,16 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    // Register Name Commands
+
+    NamedCommands.registerCommand("SetSpeakerArmPosCommand", new SetSpeakerArmPosCommand(m_arm));
+    NamedCommands.registerCommand("SpeakerCommand", new SpeakerCommand(m_shooter));
+    NamedCommands.registerCommand("SetPickupArmPosCommand", new SetPickupArmPosCommand(m_arm));
+    NamedCommands.registerCommand("RunIntakeCommand", new RunIntakeCommand(m_intake));
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     configureBindings();
   }
 
@@ -83,10 +96,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  /** public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_arm);
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
   }
-  */
-  
 }

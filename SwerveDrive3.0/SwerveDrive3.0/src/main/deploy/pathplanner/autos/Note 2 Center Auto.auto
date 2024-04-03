@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.53,
+      "y": 5.54
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SetSpeakerArmPosCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Speaker to Note 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerClimberCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunIntakeCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Note 2 to Speaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetSpeakerArmPosCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerCommand"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

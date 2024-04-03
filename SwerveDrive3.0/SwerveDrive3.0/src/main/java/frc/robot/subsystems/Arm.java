@@ -3,11 +3,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
@@ -17,28 +17,30 @@ public class Arm extends SubsystemBase{
     private final CANSparkMax m_leftArmMotor = new CANSparkMax(OperatorConstants.leftArmMotorChannel, MotorType.kBrushless);
     private final CANSparkMax m_rightArmMotor = new CANSparkMax(OperatorConstants.rightArmMotorChannel, MotorType.kBrushless);
 
-    private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(1);
-    private final SimpleMotorFeedforward m_armFeedforward = new SimpleMotorFeedforward(0, 0);
-
-    //set first
-    private final double kArmMaxAngularVelocity = 0.0;
-    private final double kArmMaxAngularAcceleration = 0.0;
-
+    private final DutyCycleEncoder armEncoder = new DutyCycleEncoder(OperatorConstants.armEncoderChannel);
+    private final ArmFeedforward m_armFeedforward = new ArmFeedforward(
+        OperatorConstants.armFeedforwardConstants[0], 
+        OperatorConstants.armFeedforwardConstants[1], 
+        OperatorConstants.armFeedforwardConstants[2]);
 
     private final ProfiledPIDController m_armPIDController = new ProfiledPIDController(
         OperatorConstants.ArmPID[0],
         OperatorConstants.ArmPID[1],
         OperatorConstants.ArmPID[2],
           new TrapezoidProfile.Constraints(
-              kArmMaxAngularVelocity, kArmMaxAngularAcceleration));
+              OperatorConstants.kArmMaxAngularVelocity, OperatorConstants.kArmMaxAngularAcceleration));
 
     public Arm() {
         
     }
 
+    public double getEncoderPosition() {
+        return (armEncoder.getAbsolutePosition() - OperatorConstants.armEncoderOffset) * 2 * Math.PI;
+    }
+
     public void setArm(double armAngle) {
-        double armOutput = m_armPIDController.calculate(armEncoder.getAbsolutePosition(), armAngle);
-        double feedForward = m_armFeedforward.calculate(m_armPIDController.getSetpoint().velocity);
+        double armOutput = m_armPIDController.calculate(getEncoderPosition(), armAngle);
+        double feedForward = m_armFeedforward.calculate(armAngle, OperatorConstants.kArmMaxAngularVelocity); //figure out the setpoint velocity here
         m_leftArmMotor.setVoltage(armOutput + feedForward);
         m_rightArmMotor.setVoltage(-(armOutput + feedForward));
     }
@@ -50,7 +52,8 @@ public class Arm extends SubsystemBase{
     }
 
     public void printArmPosition() {
-        Shuffleboard.getTab("Arm Angle").add("arm position", armEncoder.getAbsolutePosition());
+        //Shuffleboard.getTab("Arm Angle").add("arm position", armEncoder.getAbsolutePosition());
+        //figure out later so we can see what position the arm is at
     }
 
   /**

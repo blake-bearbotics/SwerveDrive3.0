@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    FollowPathCommand.warmupCommand().schedule();
   }
 
   @Override

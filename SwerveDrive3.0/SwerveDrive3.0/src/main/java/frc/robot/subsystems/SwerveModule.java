@@ -84,7 +84,15 @@ public class SwerveModule extends SubsystemBase{
    */
    
   public SwerveModuleState getState() {
-    return new SwerveModuleState(m_driveEncoder.getVelocity()*kWheelDiameter*Math.PI*60, new Rotation2d((m_turningEncoder.getPosition().getValue())*2*Math.PI)); 
+    double m_encoderRotation = 0;
+    
+    if (m_turningEncoder.getAbsolutePosition().getValue() < 0) {
+      m_encoderRotation = 2 * Math.PI + m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
+    } else {
+      m_encoderRotation = m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
+    }
+
+    return new SwerveModuleState(m_driveEncoder.getVelocity()*kWheelDiameter*Math.PI*60, new Rotation2d(m_encoderRotation)); 
     //SwerveModuleState(speedMetersPerSecond, Rotation2d(radian value)), getVelocity returns RPM
   }
 
@@ -94,15 +102,16 @@ public class SwerveModule extends SubsystemBase{
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(m_driveEncoder.getPosition() % 1 * kWheelDiameter * Math.PI, new Rotation2d((m_turningEncoder.getPosition().getValue())*2*Math.PI));
+    double m_encoderRotation = 0;
+    
+    if (m_turningEncoder.getAbsolutePosition().getValue() < 0) {
+      m_encoderRotation = 2 * Math.PI + m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
+    } else {
+      m_encoderRotation = m_turningEncoder.getAbsolutePosition().getValue() * 2 * Math.PI;
+    }
+    
+    return new SwerveModulePosition(m_driveEncoder.getPosition() % 1 * kWheelDiameter * Math.PI, new Rotation2d(m_encoderRotation));
     //SwerveModulePosition(distanceMeters, Rotation2d(radian value)), getPosition returns rotations
-  }
-
-  public void setPosition(double angle) {
-    final double turnOutput =
-        m_turningPIDController.calculate((m_turningEncoder.getAbsolutePosition().getValue() - .5) * Math.PI, angle);
-        m_turningMotor.setVoltage(turnOutput);
-
   }
 
   /**

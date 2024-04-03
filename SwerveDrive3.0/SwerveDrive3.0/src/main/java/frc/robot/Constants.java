@@ -48,13 +48,20 @@ public final class Constants {
 
     //Arm Subsystem Constants
     public static final double[] ArmPID = {0.0, 0.0, 0.0};
+    public static final double[] armFeedforwardConstants = {0.0, 0.0, 0.0};
 
     public static final int leftArmMotorChannel = 6;
     public static final int rightArmMotorChannel = 16;
+    public static final int armEncoderChannel = 0;
 
     public static final double speakerAngle = 0.0;
     public static final double ampAngle = 0.0;
     public static final double pickupAngle = 0.0;
+    public static final double armEncoderOffset = 0.0;
+
+    public static final double kArmMaxAngularVelocity = 0.0;
+    public static final double kArmMaxAngularAcceleration = 0.0;
+
 
     //Intake Constants
     public static final int leftIntakeMotorChannel = 17;
@@ -74,9 +81,9 @@ public final class Constants {
     public static final double[] backLeftTurningMotorFeedforward = {0.125, 0.356};
     public static final double[] backRightTurningMotorFeedforward = {0.125, 0.356};
 
-    //Arm Constants
-    public static final int[] armEncoderChannel = {0,0};
-    public static final double armDistance = 0.0;
+    //Climber Constants
+    public static final int[] climberEncoderChannel = {0,0};
+    public static final double climberDistance = 0.0;
 
   }
 }

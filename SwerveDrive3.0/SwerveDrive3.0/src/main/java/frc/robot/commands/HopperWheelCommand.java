@@ -28,6 +28,5 @@ public class HopperWheelCommand extends Command{
     }
 
     public void end​(boolean interrupted) {
-        shooter.stopIndexer();
     }
 }

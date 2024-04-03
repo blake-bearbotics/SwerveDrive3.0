@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+//import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Arm;
@@ -14,7 +14,7 @@ public class SetSpeakerArmPosCommand extends Command{
     public SetSpeakerArmPosCommand(Arm arm) {
         this.arm = arm;
         this.addRequirements(arm);
-        ShuffleboardTab armStuffTab = Shuffleboard.getTab("Arm Stuff");
+        //ShuffleboardTab armStuffTab = Shuffleboard.getTab("Arm Stuff");
     }
 
     @Override
@@ -24,6 +24,11 @@ public class SetSpeakerArmPosCommand extends Command{
     @Override
     public void execute(){
         arm.setArm(OperatorConstants.speakerAngle);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+
     }
 
     @Override

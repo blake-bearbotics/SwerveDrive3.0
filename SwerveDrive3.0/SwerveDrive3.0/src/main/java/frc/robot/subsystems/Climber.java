@@ -15,7 +15,7 @@ import frc.robot.Constants.OperatorConstants;
 public class Climber extends SubsystemBase{
     private final CANSparkMax m_climber = new CANSparkMax(OperatorConstants.leftArmMotorChannel, MotorType.kBrushless);
 
-    private final Encoder climberEncoder = new Encoder(OperatorConstants.armEncoderChannel[1],OperatorConstants.armEncoderChannel[1]); //wrong kind of encoder
+    private final Encoder climberEncoder = new Encoder(OperatorConstants.climberEncoderChannel[1],OperatorConstants.climberEncoderChannel[1]); //wrong kind of encoder
     private final SimpleMotorFeedforward m_climberFeedforward = new SimpleMotorFeedforward(0, 0);
 
     //set first

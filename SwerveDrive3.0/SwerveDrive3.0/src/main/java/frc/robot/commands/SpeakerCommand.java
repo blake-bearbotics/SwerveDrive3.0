@@ -30,6 +30,5 @@ public class SpeakerCommand extends Command{
 
     public void end​(boolean interrupted) {
         shooter.stopShooter();
-        shooter.stopIndexer();
     }
 }
