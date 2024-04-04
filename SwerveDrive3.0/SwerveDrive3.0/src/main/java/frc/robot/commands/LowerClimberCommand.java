@@ -5,6 +5,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Climber;
 
 //how would seth like this to work? Should it be that we can control the climber's position or that it should just climb by itself?
+//finish
 
 public class LowerClimberCommand extends Command{
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
@@ -22,7 +23,12 @@ public class LowerClimberCommand extends Command{
 
     @Override
     public void execute(){
-        climber.moveClimber(-OperatorConstants.climberDistance);
+        climber.lower();
+    }
+
+    @Override
+    public void end(boolean Interupted) {
+        climber.keepClimberFromFaling();
     }
 
     @Override

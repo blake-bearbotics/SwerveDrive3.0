@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase{
 
 
     public Intake() {
-       leftIntakeMotor = new CANSparkMax(OperatorConstants.leftIntakeMotorChannel, MotorType.kBrushless); //fix stuff
+       leftIntakeMotor = new CANSparkMax(OperatorConstants.leftIntakeMotorChannel, MotorType.kBrushless);
        rightIntakeMotor = new CANSparkMax(OperatorConstants.rightIntakeMotorChannel, MotorType.kBrushless);
     }
 

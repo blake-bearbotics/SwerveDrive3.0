@@ -3,46 +3,33 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
 
 public class Climber extends SubsystemBase{
-    private final CANSparkMax m_climber = new CANSparkMax(OperatorConstants.leftArmMotorChannel, MotorType.kBrushless);
+    //finish coding climber!!
+    private final CANSparkMax m_climber = new CANSparkMax(OperatorConstants.climberMotorChannel, MotorType.kBrushless);
 
-    private final Encoder climberEncoder = new Encoder(OperatorConstants.climberEncoderChannel[1],OperatorConstants.climberEncoderChannel[1]); //wrong kind of encoder
     private final SimpleMotorFeedforward m_climberFeedforward = new SimpleMotorFeedforward(0, 0);
-
-    //set first
-    private final double kArmMaxAngularVelocity = 0.0;
-    private final double kArmMaxAngularAcceleration = 0.0;
-
-
-    private final ProfiledPIDController m_climberPIDController = new ProfiledPIDController(
-        OperatorConstants.ArmPID[0],
-        OperatorConstants.ArmPID[1],
-        OperatorConstants.ArmPID[2],
-          new TrapezoidProfile.Constraints(
-              kArmMaxAngularVelocity, kArmMaxAngularAcceleration));
 
     public Climber() {
         
     }
 
-    public void moveClimber(double distance) {
-        //figure out the length of the rope that is pulled back and forth (should be half)
-        double armOutput = m_climberPIDController.calculate(climberEncoder.getDistance(), distance);
-        double feedForward = m_climberFeedforward.calculate(m_climberPIDController.getSetpoint().velocity);
-        m_climber.setVoltage(armOutput + feedForward);
+    public void raise() {
+        m_climber.set(OperatorConstants.climberSpeed);
     }
-        
-    public void stopArm() {
-        m_climber.set(0.0);
+
+    public void lower() {
+        m_climber.set(-OperatorConstants.climberSpeed);
+    }
+
+    public void keepClimberFromFaling(){
+        double feedForward = m_climberFeedforward.calculate(0);
+        m_climber.setVoltage(feedForward); //maybe just convert to a voltage that keeps the robot up
     }
 
   /**

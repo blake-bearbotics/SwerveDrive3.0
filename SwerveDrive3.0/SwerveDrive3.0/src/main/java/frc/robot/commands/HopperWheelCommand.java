@@ -19,6 +19,11 @@ public class HopperWheelCommand extends Command{
     }
 
     @Override
+    public void end(boolean Interupted) {
+
+    }
+
+    @Override
     public void execute(){
     }
 
@@ -28,5 +33,6 @@ public class HopperWheelCommand extends Command{
     }
 
     public void end​(boolean interrupted) {
+        shooter.stopShooter();
     }
 }

@@ -34,13 +34,20 @@ public class Arm extends SubsystemBase{
         
     }
 
-    public double getEncoderPosition() {
-        return (armEncoder.getAbsolutePosition() - OperatorConstants.armEncoderOffset) * 2 * Math.PI;
+    public double getArmPosition() {
+        double armPosition = 0.0;
+
+        if ((armEncoder.getAbsolutePosition() * 2 * Math.PI) - OperatorConstants.armEncoderOffset < 0) {
+            armPosition = 2 * Math.PI + ((armEncoder.getAbsolutePosition() * 2 * Math. PI) - OperatorConstants.armEncoderOffset);
+        } else {
+            armPosition = (armEncoder.getAbsolutePosition() * 2 * Math. PI) - OperatorConstants.armEncoderOffset;
+        }
+        return armPosition;
     }
 
     public void setArm(double armAngle) {
-        double armOutput = m_armPIDController.calculate(getEncoderPosition(), armAngle);
-        double feedForward = m_armFeedforward.calculate(armAngle, OperatorConstants.kArmMaxAngularVelocity); //figure out the setpoint velocity here
+        double armOutput = m_armPIDController.calculate(getArmPosition(), armAngle);
+        double feedForward = m_armFeedforward.calculate(m_armPIDController.getSetpoint().position, m_armPIDController.getSetpoint().velocity); //figure out the setpoint velocity here
         m_leftArmMotor.setVoltage(armOutput + feedForward);
         m_rightArmMotor.setVoltage(-(armOutput + feedForward));
     }

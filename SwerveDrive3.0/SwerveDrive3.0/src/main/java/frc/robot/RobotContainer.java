@@ -7,23 +7,29 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AmpScoreCommand;
 import frc.robot.commands.HopperWheelCommand;
+import frc.robot.commands.LowerClimberCommand;
 import frc.robot.commands.PrintArmPositionCommand;
+import frc.robot.commands.RaiseClimberCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.SetAmpArmPosCommand;
 import frc.robot.commands.SetPickupArmPosCommand;
 import frc.robot.commands.SetSpeakerArmPosCommand;
 import frc.robot.commands.SpeakerCommand;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -37,6 +43,7 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
   private final Shooter m_shooter = new Shooter();
+  private final Climber m_climber = new Climber();
   private final SendableChooser<Command> autoChooser;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -52,6 +59,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("SpeakerCommand", new SpeakerCommand(m_shooter));
     NamedCommands.registerCommand("SetPickupArmPosCommand", new SetPickupArmPosCommand(m_arm));
     NamedCommands.registerCommand("RunIntakeCommand", new RunIntakeCommand(m_intake));
+    NamedCommands.registerCommand("SetAmpArmPosCommand", new SetAmpArmPosCommand(m_arm));
+    NamedCommands.registerCommand("RaiseClimberCommand", new SetAmpArmPosCommand(m_arm));
+    NamedCommands.registerCommand("MoveClimberCommand", new LowerClimberCommand(m_climber));
+    NamedCommands.registerCommand("HopperWheelCommand", new HopperWheelCommand(m_shooter));
+    NamedCommands.registerCommand("AmpScoreCommand", new AmpScoreCommand(m_shooter));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -83,12 +95,15 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new AmpScoreCommand(m_shooter));
 
     //Speaker
-    m_driverController.b().onTrue(new SetSpeakerArmPosCommand(m_arm));
+    m_driverController.y().onTrue(new SetSpeakerArmPosCommand(m_arm));
     m_driverController.a().whileTrue(new SpeakerCommand(m_shooter));
-    m_driverController.x().onTrue(new HopperWheelCommand(m_shooter));
+    m_driverController.b().onTrue(new HopperWheelCommand(m_shooter));
 
     //testing stuff
-    m_driverController.y().onTrue(new PrintArmPositionCommand(m_arm));
+    m_driverController.start().whileTrue(new RaiseClimberCommand(m_climber));
+    m_driverController.x().whileTrue(new LowerClimberCommand(m_climber));
+
+    //Climber
   }
 
   /**

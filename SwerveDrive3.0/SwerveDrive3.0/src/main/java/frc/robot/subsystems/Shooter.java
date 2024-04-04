@@ -28,6 +28,7 @@ public class Shooter extends SubsystemBase{
     public void stopShooter() {
         leftShooterMotor.set(0.0);
         rightShooterMotor.set(0.0);
+        indexerMotor.set(0.0);
     }
 
     public void runIndexer() {
