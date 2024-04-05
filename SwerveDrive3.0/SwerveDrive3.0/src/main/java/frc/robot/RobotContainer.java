@@ -8,14 +8,14 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AmpScoreCommand;
 import frc.robot.commands.HopperWheelCommand;
 import frc.robot.commands.LowerClimberCommand;
-import frc.robot.commands.PrintArmPositionCommand;
 import frc.robot.commands.RaiseClimberCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.SetAmpArmPosCommand;
-import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetPickupArmPosCommand;
 import frc.robot.commands.SetSpeakerArmPosCommand;
 import frc.robot.commands.SpeakerCommand;
+import frc.robot.commands.StopIntakeCommand;
+import frc.robot.commands.StopSpeakerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
@@ -24,13 +24,10 @@ import frc.robot.subsystems.Shooter;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -65,6 +62,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("MoveClimberCommand", new LowerClimberCommand(m_climber));
     NamedCommands.registerCommand("HopperWheelCommand", new HopperWheelCommand(m_shooter));
     NamedCommands.registerCommand("AmpScoreCommand", new AmpScoreCommand(m_shooter));
+    NamedCommands.registerCommand("StopIntakeCommand", new StopIntakeCommand(m_intake));
+    NamedCommands.registerCommand("StopSpeakerCommand", new StopSpeakerCommand(m_shooter));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -96,13 +95,12 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new AmpScoreCommand(m_shooter));
 
     //Speaker
-    m_driverController.y().onTrue(new SetSpeakerArmPosCommand(m_arm));
-    m_driverController.a().whileTrue(new SpeakerCommand(m_shooter));
-    m_driverController.b().onTrue(new HopperWheelCommand(m_shooter));
+    m_driverController.a().onTrue(new SetSpeakerArmPosCommand(m_arm));
+    m_driverController.b().whileTrue(new SpeakerCommand(m_shooter));
 
     //testing stuff
-    m_driverController.start().whileTrue(new RaiseClimberCommand(m_climber));
-    m_driverController.x().whileTrue(new LowerClimberCommand(m_climber));
+    m_driverController.x().whileTrue(new RaiseClimberCommand(m_climber));
+    m_driverController.y().whileTrue(new LowerClimberCommand(m_climber));
 
     //Climber
   }

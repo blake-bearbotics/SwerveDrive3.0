@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Climber;
 
 //how would seth like this to work? Should it be that we can control the climber's position or that it should just climb by itself?

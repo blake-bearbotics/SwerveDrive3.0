@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 5.54
+      "x": 0.71,
+      "y": 4.38
     },
-    "rotation": 0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -30,9 +30,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StopSpeakerCommand"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Leave Zone"
+            "pathName": "Match 5 Auto Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetPickupArmPosCommand"
           }
         }
       ]

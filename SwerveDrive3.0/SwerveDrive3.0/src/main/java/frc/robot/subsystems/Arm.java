@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,6 +51,9 @@ public class Arm extends SubsystemBase{
         double feedForward = m_armFeedforward.calculate(m_armPIDController.getSetpoint().position, m_armPIDController.getSetpoint().velocity); //figure out the setpoint velocity here
         m_leftArmMotor.setVoltage(-(armOutput + feedForward));
         m_rightArmMotor.setVoltage((armOutput + feedForward));
+        SmartDashboard.putNumber("Arm Angle", getArmPosition());
+        SmartDashboard.putNumber("Arm Outupt", armOutput);
+        SmartDashboard.putNumber("Arm Feed Forward", feedForward);
     }
         
     public void stopArm() {

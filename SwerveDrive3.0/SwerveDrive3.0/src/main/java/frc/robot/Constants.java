@@ -24,10 +24,10 @@ public final class Constants {
     public static final double kTurningMotorGearRatio = 150/7; //150/7 motor rot = 1 wheel rot
 
     //Drive Motor IDs
-    public static final int frontLeftDriveMotorChannel = 4;
-    public static final int backLeftDriveMotorChannel = 3;
-    public static final int frontRightDriveMotorChannel = 1;
-    public static final int backRightDriveMotorChannel = 2;
+    public static final int frontLeftDriveMotorChannel = 2;
+    public static final int backLeftDriveMotorChannel = 1;
+    public static final int frontRightDriveMotorChannel = 3;
+    public static final int backRightDriveMotorChannel = 4;
 
     //Turning Motor IDs
     public static final int frontLeftTurningMotorChannel = frontLeftDriveMotorChannel + 10;
@@ -47,8 +47,8 @@ public final class Constants {
     //kd is volts*time/degrees
 
     //Arm Subsystem Constants
-    public static final double[] ArmPID = {2, 0.0, 0.0}; //continue to adjust
-    public static final double[] armFeedforwardConstants = {0.2, 0.361, 1.5}; //continue to adjust
+    public static final double[] ArmPID = {2, 0.0, 0.0}; //continue to adjust, we should add a d value because we do have quite a lot of inertia in the system
+    public static final double[] armFeedforwardConstants = {0.2, 0.361, 1.5}; //continue to adjust, tentitivley {0, 0.45, 4.29} to get ks, lay robot on its side, hold up arm, and increase ks until the arm barely starts moving
 
     public static final int leftArmMotorChannel = 6;
     public static final int rightArmMotorChannel = 16;

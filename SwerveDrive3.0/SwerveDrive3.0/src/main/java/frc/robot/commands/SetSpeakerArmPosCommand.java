@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +25,7 @@ public class SetSpeakerArmPosCommand extends Command{
     @Override
     public void execute(){
         arm.setArm(OperatorConstants.speakerAngle);
+        SmartDashboard.putString("Arm Position", "Speaker");
     }
 
     @Override
