@@ -28,7 +28,7 @@ public class SpeakerCommand extends Command{
         return false;
     }
 
-    public void end​(boolean interrupted) {
+    public void end(boolean interrupted) {
         shooter.stopShooter();
     }
 }

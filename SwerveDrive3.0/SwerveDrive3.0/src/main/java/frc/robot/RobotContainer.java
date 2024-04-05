@@ -12,6 +12,7 @@ import frc.robot.commands.PrintArmPositionCommand;
 import frc.robot.commands.RaiseClimberCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.SetAmpArmPosCommand;
+import frc.robot.commands.SetArmPositionCommand;
 import frc.robot.commands.SetPickupArmPosCommand;
 import frc.robot.commands.SetSpeakerArmPosCommand;
 import frc.robot.commands.SpeakerCommand;

@@ -19,8 +19,8 @@ public class Intake extends SubsystemBase{
     }
 
     public void runIntake() {
-        leftIntakeMotor.set(OperatorConstants.intakeSpeed);
-        rightIntakeMotor.set(OperatorConstants.intakeSpeed);
+        leftIntakeMotor.set(-OperatorConstants.intakeSpeed);
+        rightIntakeMotor.set(-OperatorConstants.intakeSpeed);
     }
      
     public void stopIntake() {

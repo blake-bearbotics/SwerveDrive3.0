@@ -35,8 +35,8 @@ public class Drivetrain extends SubsystemBase {
 
   private Field2d m_field = new Field2d();
 
-  public static final double kMaxSpeed = 4.0; // 3 meters per second
-  public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
+  public static final double kMaxSpeed = 3.0; // 3 meters per second
+  public static final double kMaxAngularSpeed = 6 * Math.PI; // 1/2 rotation per second
   //check out chassis speeds
 
   private final Translation2d m_frontLeftLocation = new Translation2d(-OperatorConstants.kWheelBase / 2.0, OperatorConstants.kTrackWidth / 2.0);

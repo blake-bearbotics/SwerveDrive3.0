@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "SetSpeakerArmPosCommand"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "SpeakerCommand"
           }
         },
@@ -36,21 +30,15 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Speaker to Note 2"
+            "pathName": "Pick Up Note 1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "LowerClimberCommand"
+            "name": "SetPickupArmPosCommand"
           }
         },
         {
@@ -62,13 +50,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 5.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Note 2 to Speaker"
+            "pathName": "Note 1 to Speaker"
           }
         },
         {

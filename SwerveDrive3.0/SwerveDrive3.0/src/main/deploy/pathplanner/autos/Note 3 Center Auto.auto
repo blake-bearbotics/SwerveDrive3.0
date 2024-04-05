@@ -36,21 +36,15 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Speaker to Note 2"
+            "pathName": "Pick Up Note 3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "LowerClimberCommand"
+            "name": "SetPickupArmPosCommand"
           }
         },
         {
@@ -62,13 +56,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Note 2 to Speaker"
+            "pathName": "Note 3 to Speaker"
           }
         },
         {
@@ -98,7 +92,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 3.0
           }
         },
         {

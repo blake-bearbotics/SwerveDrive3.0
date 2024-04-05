@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
@@ -27,8 +28,7 @@ public class SwerveModule extends SubsystemBase{
   private static final double kWheelDiameter = 0.1016;
 
   private static final double kModuleMaxAngularVelocity = Drivetrain.kMaxAngularSpeed;
-  private static final double kModuleMaxAngularAcceleration =
-      2 * Math.PI; // radians per second squared
+  private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
 
   private final CANSparkMax m_driveMotor;
   private final CANSparkMax m_turningMotor;
@@ -36,13 +36,17 @@ public class SwerveModule extends SubsystemBase{
   private final RelativeEncoder m_driveEncoder; // RPM
   private final CoreCANcoder m_turningEncoder; //RPS
 
-  private final PIDController m_drivePIDController= new PIDController(0.5,0,0);
+  private final PIDController m_drivePIDController= new PIDController(0.1,0,0);
   private final ProfiledPIDController m_turningPIDController = new ProfiledPIDController(
           OperatorConstants.turningEncoderPID[0],
           OperatorConstants.turningEncoderPID[1],
           OperatorConstants.turningEncoderPID[2],
           new TrapezoidProfile.Constraints(
               kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
+    private final PIDController m_turningPIDController2 = new PIDController(
+          OperatorConstants.turningEncoderPID[0],
+          OperatorConstants.turningEncoderPID[1],
+          OperatorConstants.turningEncoderPID[2]);
       
   // Gains are for example purposes only - must be determined for your own robot! Figure out what in the world is going on with this bc I don't have the energy right now.
   private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(0, 0);
@@ -73,7 +77,7 @@ public class SwerveModule extends SubsystemBase{
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
-    m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    m_turningPIDController2.enableContinuousInput(-Math.PI, Math.PI);
 
     }
 
@@ -134,7 +138,7 @@ public class SwerveModule extends SubsystemBase{
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, encoderRotation); 
     // Optimize the reference state to avoid spinning further than 90 degrees
     
-    //state.speedMetersPerSecond *= state.angle.minus(encoderRotation).getCos();
+    // state.speedMetersPerSecond *= state.angle.minus(encoderRotation).getCos();
     // Calculate the drive output from the drive PID controller.
     final double driveOutput =
         m_drivePIDController.calculate(m_driveEncoder.getVelocity() * kWheelDiameter * Math.PI * 60 / OperatorConstants.kDriveMotorGearRatio, 
@@ -144,13 +148,17 @@ public class SwerveModule extends SubsystemBase{
 
     // Calculate the turning motor output from the turning PID controller.
     final double turnOutput =
-            m_turningPIDController.calculate(m_encoderRotation, state.angle.getRadians());
+            m_turningPIDController2.calculate(m_encoderRotation, state.angle.getRadians());
 
     final double turnFeedforward =
         m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
 
+    if (m_driveMotor.getDeviceId() == 2) {
+      SmartDashboard.putNumber("Drive Voltage", driveOutput + driveFeedforward);
+      SmartDashboard.putNumber("Turning Voltage", -(turnOutput + turnFeedforward));
+    }
 
-    m_driveMotor.setVoltage(driveOutput + driveFeedforward);
-    m_turningMotor.setVoltage(-(turnOutput + turnFeedforward));
+    m_driveMotor.set(driveOutput);
+    m_turningMotor.set(-(turnOutput));
   }
 }

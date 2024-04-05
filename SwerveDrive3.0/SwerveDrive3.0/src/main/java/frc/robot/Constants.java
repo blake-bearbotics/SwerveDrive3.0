@@ -42,38 +42,38 @@ public final class Constants {
     public static final int backRightEncoderChannel = backRightDriveMotorChannel + 20;
 
     //Turning PID values
-    public static final double[] turningEncoderPID = {2.0, 0.0, 0.0}; //maybe tune?
+    public static final double[] turningEncoderPID = {1.0, 0.0, 0.0}; //maybe tune?
     //kp is volts/degrees (in radians)
     //kd is volts*time/degrees
 
     //Arm Subsystem Constants
-    public static final double[] ArmPID = {0.0, 0.0, 0.0}; //continue to adjust
-    public static final double[] armFeedforwardConstants = {0.0, 0.361, 1.5}; //continue to adjust
+    public static final double[] ArmPID = {2, 0.0, 0.0}; //continue to adjust
+    public static final double[] armFeedforwardConstants = {0.2, 0.361, 1.5}; //continue to adjust
 
     public static final int leftArmMotorChannel = 6;
     public static final int rightArmMotorChannel = 16;
     public static final int armEncoderChannel = 0;
 
-    public static final double speakerAngle = 0.0;
-    public static final double ampAngle = 0.0;
-    public static final double pickupAngle = 0.0349;
+    public static final double speakerAngle = 0.401;
+    public static final double ampAngle = 1.78;
+    public static final double pickupAngle = 0.025;
     public static final double armEncoderOffset = 5.92;
 
     public static final double kArmMaxAngularVelocity = Math.PI; //figure out something reasonable
-    public static final double kArmMaxAngularAcceleration = 0.0; //figure out something reasonable
+    public static final double kArmMaxAngularAcceleration = Math.PI/2; //figure out something reasonable
 
 
     //Intake Constants
     public static final int leftIntakeMotorChannel = 17;
     public static final int rightIntakeMotorChannel = 7;
     public static final int indexerMotorChannel = 19;
-    public static final double intakeSpeed = 0.0; //figure out this value
+    public static final double intakeSpeed = 0.7; //figure out this value
 
     //Shooter Constants
     public static final int leftShooterMotorChannel = 18;
     public static final int rightShooterMotorChannel = 8;
-    public static final double ampSpeed = 0.0; //figure out this value
-    public static final double speakerSpeed = 0.0; //figure out this value
+    public static final double ampSpeed = 0.5; //figure out this value
+    public static final double speakerSpeed = 0.9; //figure out this value
 
     //Turning FeedForward Values
     public static final double[] frontLeftTurningMotorFeedforward = {0.125, 0.356};

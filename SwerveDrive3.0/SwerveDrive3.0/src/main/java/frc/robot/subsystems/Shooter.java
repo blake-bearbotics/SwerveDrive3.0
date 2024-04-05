@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public void runIndexer() {
-        indexerMotor.set(OperatorConstants.intakeSpeed); // make its own subsystem?
+        indexerMotor.set(-OperatorConstants.intakeSpeed); // make its own subsystem?
     }
 
 

@@ -48,19 +48,14 @@ public class Arm extends SubsystemBase{
     public void setArm(double armAngle) {
         double armOutput = m_armPIDController.calculate(getArmPosition(), armAngle);
         double feedForward = m_armFeedforward.calculate(m_armPIDController.getSetpoint().position, m_armPIDController.getSetpoint().velocity); //figure out the setpoint velocity here
-        m_leftArmMotor.setVoltage(armOutput + feedForward);
-        m_rightArmMotor.setVoltage(-(armOutput + feedForward));
+        m_leftArmMotor.setVoltage(-(armOutput + feedForward));
+        m_rightArmMotor.setVoltage((armOutput + feedForward));
     }
         
     public void stopArm() {
         m_leftArmMotor.set(0.0);
         m_rightArmMotor.set(0.0);
 
-    }
-
-    public void printArmPosition() {
-        //Shuffleboard.getTab("Arm Angle").add("arm position", armEncoder.getAbsolutePosition());
-        //figure out later so we can see what position the arm is at
     }
 
   /**

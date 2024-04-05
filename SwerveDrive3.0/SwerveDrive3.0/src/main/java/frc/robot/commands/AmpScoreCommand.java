@@ -29,7 +29,7 @@ public class AmpScoreCommand extends Command{
         return false;
     }
 
-    public void end​(boolean interrupted) {
+    public void end(boolean interrupted) {
         shooter.stopShooter();
     }
 }
