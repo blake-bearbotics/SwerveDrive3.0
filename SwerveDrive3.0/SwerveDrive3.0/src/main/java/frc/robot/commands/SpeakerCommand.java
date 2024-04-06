@@ -17,7 +17,6 @@ public class SpeakerCommand extends Command{
     @Override
     public void initialize(){
         shooter.runShooter(OperatorConstants.speakerSpeed);
-        shooter.runIndexer();
     }
 
     @Override

@@ -16,7 +16,6 @@ public class AmpScoreCommand extends Command{
 
     @Override
     public void initialize(){
-        shooter.runIndexer();
         shooter.runShooter(OperatorConstants.ampSpeed);
     }
 

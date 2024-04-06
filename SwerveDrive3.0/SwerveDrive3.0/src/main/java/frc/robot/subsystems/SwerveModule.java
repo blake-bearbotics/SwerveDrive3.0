@@ -158,7 +158,7 @@ public class SwerveModule extends SubsystemBase{
       SmartDashboard.putNumber("Turning Voltage", -(turnOutput + turnFeedforward));
     }
 
-    m_driveMotor.set(driveOutput);
+    m_driveMotor.set(-driveOutput);
     m_turningMotor.set(-(turnOutput));
   }
 }

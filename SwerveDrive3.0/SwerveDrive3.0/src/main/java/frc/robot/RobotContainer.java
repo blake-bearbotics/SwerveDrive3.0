@@ -18,6 +18,7 @@ import frc.robot.commands.StopIntakeCommand;
 import frc.robot.commands.StopSpeakerCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.HopperWheel;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
@@ -42,6 +43,7 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Shooter m_shooter = new Shooter();
   private final Climber m_climber = new Climber();
+  private final HopperWheel m_hopperWheel = new HopperWheel();
   private final SendableChooser<Command> autoChooser;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -60,7 +62,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("SetAmpArmPosCommand", new SetAmpArmPosCommand(m_arm));
     NamedCommands.registerCommand("RaiseClimberCommand", new SetAmpArmPosCommand(m_arm));
     NamedCommands.registerCommand("MoveClimberCommand", new LowerClimberCommand(m_climber));
-    NamedCommands.registerCommand("HopperWheelCommand", new HopperWheelCommand(m_shooter));
+    NamedCommands.registerCommand("HopperWheelCommand", new HopperWheelCommand(m_hopperWheel));
     NamedCommands.registerCommand("AmpScoreCommand", new AmpScoreCommand(m_shooter));
     NamedCommands.registerCommand("StopIntakeCommand", new StopIntakeCommand(m_intake));
     NamedCommands.registerCommand("StopSpeakerCommand", new StopSpeakerCommand(m_shooter));
@@ -96,7 +98,7 @@ public class RobotContainer {
 
     //Speaker
     m_driverController.a().onTrue(new SetSpeakerArmPosCommand(m_arm));
-    m_driverController.b().whileTrue(new SpeakerCommand(m_shooter));
+    m_driverController.b().whileTrue(new HopperWheelCommand(m_hopperWheel));
 
     //testing stuff
     m_driverController.x().whileTrue(new RaiseClimberCommand(m_climber));

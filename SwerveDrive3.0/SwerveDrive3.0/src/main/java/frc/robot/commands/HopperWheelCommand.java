@@ -1,21 +1,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.HopperWheel;
 
 public class HopperWheelCommand extends Command{
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
-    private final Shooter shooter;
+    private final HopperWheel hopperWheel;
     
-    public HopperWheelCommand(Shooter shooter) {
-        this.shooter = shooter;
-        this.addRequirements(shooter);
+    public HopperWheelCommand(HopperWheel hopperWheel) {
+        this.hopperWheel = hopperWheel;
+        this.addRequirements(hopperWheel);
     }
 
     @Override
     public void initialize(){
-        shooter.runIndexer();
+        hopperWheel.runIndexer();
     }
 
     @Override
@@ -28,6 +28,6 @@ public class HopperWheelCommand extends Command{
     }
 
     public void end(boolean interrupted) {
-        shooter.stopShooter();
+        hopperWheel.stopIndexer();
     }
 }

@@ -42,13 +42,13 @@ public final class Constants {
     public static final int backRightEncoderChannel = backRightDriveMotorChannel + 20;
 
     //Turning PID values
-    public static final double[] turningEncoderPID = {1.0, 0.0, 0.0}; //maybe tune?
+    public static final double[] turningEncoderPID = {0.8, 0.0, 0.0}; //maybe tune?
     //kp is volts/degrees (in radians)
     //kd is volts*time/degrees
 
     //Arm Subsystem Constants
     public static final double[] ArmPID = {2, 0.0, 0.0}; //continue to adjust, we should add a d value because we do have quite a lot of inertia in the system
-    public static final double[] armFeedforwardConstants = {0.2, 0.361, 1.5}; //continue to adjust, tentitivley {0, 0.45, 4.29} to get ks, lay robot on its side, hold up arm, and increase ks until the arm barely starts moving
+    public static final double[] armFeedforwardConstants = {0.2, 0.45, 4.29}; //continue to adjust, tentitivley {0, 0.45, 4.29} to get ks, lay robot on its side, hold up arm, and increase ks until the arm barely starts moving
 
     public static final int leftArmMotorChannel = 6;
     public static final int rightArmMotorChannel = 16;
@@ -56,8 +56,8 @@ public final class Constants {
 
     public static final double speakerAngle = 0.401;
     public static final double ampAngle = 1.78;
-    public static final double pickupAngle = 0.025;
-    public static final double armEncoderOffset = 5.92;
+    public static final double pickupAngle = 0;
+    public static final double armEncoderOffset = 0.616;
 
     public static final double kArmMaxAngularVelocity = Math.PI; //figure out something reasonable
     public static final double kArmMaxAngularAcceleration = Math.PI/2; //figure out something reasonable
@@ -83,7 +83,7 @@ public final class Constants {
 
     //Climber Constants
     public static final int climberMotorChannel = 9;
-    public static final double climberSpeed = 0.0;
+    public static final double climberSpeed = 0.7;
 
   }
 }

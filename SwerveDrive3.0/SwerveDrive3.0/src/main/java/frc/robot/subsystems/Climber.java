@@ -14,7 +14,7 @@ public class Climber extends SubsystemBase{
     private final CANSparkMax m_climber = new CANSparkMax(OperatorConstants.climberMotorChannel, MotorType.kBrushless);
 
     private final SimpleMotorFeedforward m_climberFeedforward = new SimpleMotorFeedforward(0, 0); //maybe better to supply a constant voltage
-
+    //probably needs to be a armfeedforward, estimated values are {ks, 0.10, 243.73, 0.01}
     public Climber() {
         
     }

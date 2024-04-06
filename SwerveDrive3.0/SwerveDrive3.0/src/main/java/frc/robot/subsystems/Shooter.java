@@ -11,13 +11,11 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 public class Shooter extends SubsystemBase{
     private final CANSparkMax leftShooterMotor;
     private final CANSparkMax rightShooterMotor;
-    private final CANSparkMax indexerMotor;
 
 
     public Shooter() {
        leftShooterMotor = new CANSparkMax(OperatorConstants.leftShooterMotorChannel, MotorType.kBrushless);
        rightShooterMotor = new CANSparkMax(OperatorConstants.rightShooterMotorChannel, MotorType.kBrushless);
-       indexerMotor = new CANSparkMax(OperatorConstants.indexerMotorChannel, MotorType.kBrushless);
     }
 
     public void runShooter(double speed) {
@@ -28,13 +26,7 @@ public class Shooter extends SubsystemBase{
     public void stopShooter() {
         leftShooterMotor.set(0.0);
         rightShooterMotor.set(0.0);
-        indexerMotor.set(0.0);
     }
-
-    public void runIndexer() {
-        indexerMotor.set(-OperatorConstants.intakeSpeed); // make its own subsystem?
-    }
-
 
     
     /**
